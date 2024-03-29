@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.36
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: to_do
+    ports:
+      - "3307:3306" # 호스트 머신의 3307 포트와 컨테이너의 3306 포트를 연결합니다.
+
+  my-spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      WAIT_HOSTS: mysqldb:3306
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/to_do?createDatabaseIfNotExist=true&characterEncoding=UTF-8&profileSql=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 12345678
+    command: ["java", "-jar", "/app.jar"]
+
