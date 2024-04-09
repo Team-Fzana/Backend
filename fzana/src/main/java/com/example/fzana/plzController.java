@@ -10,6 +10,6 @@ public class plzController {
 
     @GetMapping("")
     public String index(){
-        return "hello";
+        return "hello world!!!";
     }
 }
