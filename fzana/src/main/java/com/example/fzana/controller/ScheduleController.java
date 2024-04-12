@@ -35,8 +35,12 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedSchedule);
     }
     // 3. todo-list 삭제
-    // 4. todo-list 진행 체크(변경)
-    // 5. calendar(todo-lists) 조회
+    @DeleteMapping("/todo-list/{todolistId}")
+    public ResponseEntity<ScheduleForm> deleteTodoList(@PathVariable Long todolistId){
+        ScheduleForm deletedSchedule = scheduleService.delete(todolistId);
 
+        return ResponseEntity.status(HttpStatus.OK).body(deletedSchedule);
+    }
+    // 4. todo-list 진행 체크(변경) -> 생각해보니 진행 체크(완료, 진행 중, 미 진행)은 todo-list 수정에서 할 수 있지 않을까? 라는 생각이 드네요
 
 }
