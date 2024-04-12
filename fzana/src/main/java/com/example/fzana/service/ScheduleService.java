@@ -31,10 +31,11 @@ public class ScheduleService {
 
         // 4. DTO로 변환해 반환
         return ScheduleForm.createSchedule(created);
-
     }
 
-
+    /*
+    * 일정 수정
+    * */
     public ScheduleForm updateSchedule(Long todolistId, ScheduleForm scheduleForm) {
         // 1. 일정 조회 및 예외 처리
         Schedule target = scheduleRepository.findById(todolistId)
@@ -49,8 +50,23 @@ public class ScheduleService {
 
         // 4. 일정 엔티티를 DTO로 변환 및 반환
         return ScheduleForm.createSchedule(updated);
-
     }
 
+    /*
+     * 일정 삭제
+     * */
+    public ScheduleForm delete(Long todolistId) {
+        // 1. 일정 조회 및 예외 처리
+        Schedule target = scheduleRepository.findById(todolistId)
+                .orElseThrow(() -> new IllegalArgumentException("일정 삭제 실패!"+
+                        "대상 일정이 없습니다."));
+
+        // 2. 일정 삭제
+        scheduleRepository.delete(target);
+
+        // 3. 삭제 일정을 DTO로 변환 후 반환
+        return ScheduleForm.createSchedule(target);
+
+    }
 
 }
