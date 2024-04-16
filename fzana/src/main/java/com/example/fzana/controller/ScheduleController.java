@@ -28,16 +28,16 @@ public class ScheduleController {
     }
 
     // 2. todo-list 추가
-    @PostMapping("/user/{userId}/todo-list")
-    public ResponseEntity<ScheduleForm> createTodoList(@PathVariable Long userId,
-                                                       @RequestBody ScheduleForm scheduleForm){
-        // 서비스에 위임
-        ScheduleForm createdSchedule = scheduleService.createSchedule(userId, scheduleForm);
-        // 결과 응답
-        return (createdSchedule != null) ?
-                ResponseEntity.status(HttpStatus.OK).body(createdSchedule) :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+//    @PostMapping("/user/{userId}/todo-list")
+//    public ResponseEntity<ScheduleForm> createTodoList(@PathVariable Long userId,
+//                                                       @RequestBody ScheduleForm scheduleForm){
+//        // 서비스에 위임
+//        ScheduleForm createdSchedule = scheduleService.createschedule(userId, scheduleForm);
+//        // 결과 응답
+//        return (createdSchedule != null) ?
+//                ResponseEntity.status(HttpStatus.OK).body(createdSchedule) :
+//                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//    }
 
     // 3. todo-list 수정
     @PutMapping("/todo-list/{todolistId}")
