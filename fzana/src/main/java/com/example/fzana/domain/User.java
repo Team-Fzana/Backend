@@ -22,11 +22,12 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "user") // Schedule 테이블과 일대다 관계
-    private List<Schedule> schedules = new ArrayList<>();
 
-    @OneToMany // Follow 테이블과 일대다 관계
-    private List<Follow> follows = new ArrayList<>();
+//    @OneToMany(mappedBy = "user") // Schedule 테이블과 일대다 관계
+//    private List<Schedule> schedules = new ArrayList<>();
+//
+//    @OneToMany // Follow 테이블과 일대다 관계
+//    private List<Follow> follows = new ArrayList<>();
 
     @Column(name="email", nullable = false)
     private String email;
