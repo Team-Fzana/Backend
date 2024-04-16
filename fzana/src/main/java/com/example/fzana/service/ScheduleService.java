@@ -4,6 +4,7 @@ import com.example.fzana.domain.Schedule;
 import com.example.fzana.domain.User;
 import com.example.fzana.dto.ScheduleForm;
 import com.example.fzana.repository.ScheduleRepository;
+import com.example.fzana.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class ScheduleService {
         // 1. 사용자 id 조회 및 예외 처리
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("일정 & todo-list 추가 실패! " +
-                "해당 사용자가 없습니다."));
+                        "해당 사용자가 없습니다."));
 
         // 2. 일정 엔티티 생성
         Schedule schedule = Schedule.createSchedule(user, scheduleForm);
