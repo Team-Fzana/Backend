@@ -22,7 +22,6 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-
 //    @OneToMany(mappedBy = "user") // Schedule 테이블과 일대다 관계
 //    private List<Schedule> schedules = new ArrayList<>();
 //
