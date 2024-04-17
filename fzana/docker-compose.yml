@@ -9,6 +9,9 @@ services:
       MYSQL_DATABASE: to_do
     ports:
       - "3307:3306" # 호스트 머신의 3307 포트와 컨테이너의 3306 포트를 연결합니다.
+    volumes:
+      - mysql-data:/var/lib/mysql
+
 
   my-spring-boot-app:
     build:
@@ -21,7 +24,10 @@ services:
     environment:
       WAIT_HOSTS: mysql:3306
       SPRING_DATASOURCE_URL: "${SPRING_DATASOURCE_URL}"
-      SPRING_DATASOURCE_USERNAME: "${MYSQL_HOST_PORT}"
+      SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
       SPRING_DATASOURCE_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     command: ["java", "-jar", "/app.jar"]
+
+volumes:
+  mysql-data:
 

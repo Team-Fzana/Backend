@@ -13,7 +13,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
@@ -29,13 +29,13 @@ public class User {
     @Column
     private String password;
 
-    @Column
+    @Column(name = "nick_name")
     private String nickName;
 
     @Column
     private String introduce;
 
-    @Column
+    @Column(name = "user_photo")
     private String userPhoto;
 
     @Enumerated(EnumType.STRING)
@@ -46,11 +46,11 @@ public class User {
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
+    //@Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가 //JPA 2.2이상이면 필요없고 Column만 쓰면됨
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
+   // @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
     private LocalDateTime deletedAt;
 
 
