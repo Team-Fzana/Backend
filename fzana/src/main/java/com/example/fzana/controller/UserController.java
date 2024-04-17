@@ -41,9 +41,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<User> signIn(@RequestBody UserForm userForm) {
-        User user = userService.signIn(userForm.getEmail(),userForm.getPassword());
+    public ResponseEntity<User> signIn(@RequestParam String email, @RequestParam String password) {
+        User user = userService.signIn(email,password);
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> signOut() {
+        userService.signOut();
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
 }
