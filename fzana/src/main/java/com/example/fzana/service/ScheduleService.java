@@ -4,6 +4,7 @@ import com.example.fzana.domain.Schedule;
 import com.example.fzana.domain.User;
 import com.example.fzana.dto.ScheduleForm;
 import com.example.fzana.repository.ScheduleRepository;
+import com.example.fzana.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;        // 수연이가 해줄거임
+
+
 
 
     /*
