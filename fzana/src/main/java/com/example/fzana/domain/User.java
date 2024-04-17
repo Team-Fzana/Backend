@@ -19,7 +19,7 @@ public class User {
     private static final int MAX_NICK_NAME_LENGTH=100;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     private Long id;
 
 //    @OneToMany(mappedBy = "user") // Schedule 테이블과 일대다 관계
