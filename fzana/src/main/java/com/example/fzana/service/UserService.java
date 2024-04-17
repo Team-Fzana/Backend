@@ -1,6 +1,5 @@
 package com.example.fzana.service;
 
-import com.example.fzana.domain.States;
 import com.example.fzana.domain.User;
 import com.example.fzana.dto.UserForm;
 import com.example.fzana.exception.InvalidUserException;
@@ -34,10 +33,26 @@ public class UserService {
         return userRepository.save(user); //DB 저장
 
     }
+
+    /*
+     * 로그인
+     */
+    @Transactional
+    public User signIn(String email, String password) {
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new InvalidUserException("가입되지 않은 이메일입니다."));
+
+        if (!user.getPassword().equals(password)) {
+            throw new InvalidUserException("비밀번호가 올바르지 않습니다.");
+        }
+
+        return user;
+    }
+
     /*
      * 이메일 중복 확인
      */
-    private void validateDuplicateEmail(String email) {
+    public void validateDuplicateEmail(String email) {
         Optional<User> findUser=userRepository.findByEmail(email);
         if (findUser.isPresent()) {
             throw new InvalidUserException("이미 가입된 이메일입니다.");

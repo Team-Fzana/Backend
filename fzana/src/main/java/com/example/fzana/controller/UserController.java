@@ -19,6 +19,7 @@ public class UserController {
         this.userService=userService;
     }
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody UserForm userForm) {
         User user=userService.signUp(
@@ -29,4 +30,20 @@ public class UserController {
         );
         return ResponseEntity.ok(user);
     }
+
+    // 이메일 중복 확인
+    @GetMapping("/valid")
+    public ResponseEntity<String> checkDuplicateEmail(@RequestParam String email) {
+        userService.validateDuplicateEmail(email);
+        return ResponseEntity.ok("사용 가능한 이메일입니다.");
+    }
+
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<User> signIn(@RequestBody UserForm userForm) {
+        User user = userService.signIn(userForm.getEmail(),userForm.getPassword());
+        return ResponseEntity.ok(user);
+    }
+
 }
