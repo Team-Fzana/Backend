@@ -1,9 +1,7 @@
 package com.example.fzana.controller;
 
 import com.example.fzana.domain.Follow;
-import com.example.fzana.domain.User;
 import com.example.fzana.dto.FollowForm;
-import com.example.fzana.repository.UserRepository;
 import com.example.fzana.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
