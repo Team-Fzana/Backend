@@ -1,5 +1,7 @@
 package com.example.fzana.domain;
 
+import com.example.fzana.dto.IntroduceRequest;
+import com.example.fzana.dto.NicknameRequest;
 import com.example.fzana.exception.InvalidUserException;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,7 +36,7 @@ public class User {
     @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="nick_name", nullable = false)
+    @Column(name="nick_name")
     private String nickName;
 
     @Column
@@ -85,4 +87,13 @@ public class User {
         }
     }
 
+    // 닉네임 등록 & 수정
+    public void updateNickname(NicknameRequest nicknameRequest) {
+        this.nickName = nicknameRequest.getNickname();
+    }
+
+    // 소개글 등록 & 수정
+    public void updateIntroduce(IntroduceRequest introduceRequest) {
+        this.introduce = introduceRequest.getIntroduce();
+    }
 }
