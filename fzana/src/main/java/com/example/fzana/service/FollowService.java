@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FollowService {
@@ -47,5 +48,24 @@ public class FollowService {
     public List<Follow> getFollowingList(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         return followRepository.findByFollower(user);
+    }
+
+    public List<Follow> getFollowerList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        // 자기 자신을 제외한 팔로워 목록을 반환합니다.
+        return followRepository.findByFollowing(user).stream()
+                .filter(follow -> !follow.getFollower().getId().equals(userId))
+                .collect(Collectors.toList());
+    }
+
+    public String cancelFollow(Long userId, Long targetUserId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User targetUser = userRepository.findById(targetUserId).orElseThrow(() -> new IllegalArgumentException("Target user not found"));
+        Follow follow = followRepository.findByFollowerAndFollowing(user, targetUser)
+                .orElseThrow(() -> new IllegalStateException("Follow not found"));
+        followRepository.delete(follow);
+        return "Follow successfully cancelled";
     }
 }
