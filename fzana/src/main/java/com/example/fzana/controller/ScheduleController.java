@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequiredArgsConstructor
-//@RequestMapping("/api/v1")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
