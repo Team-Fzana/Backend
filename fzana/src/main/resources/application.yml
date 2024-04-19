@@ -17,3 +17,6 @@ spring:
     init:
       data-locations: classpath*:db/data.sql
       mode: always
+
+  profiles:
+    include: aws #aws.yml 불러오기

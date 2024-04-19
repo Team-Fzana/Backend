@@ -171,3 +171,8 @@ gradle-app.setting
 
 # .env 파일 안 뜨게 하기
 .env
+
+# ignore application-aws.yml
+/src/main/resources/application.yml
+/src/main/resources/application-aws.yml
+
