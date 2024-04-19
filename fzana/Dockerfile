@@ -10,7 +10,8 @@ COPY settings.gradle .
 COPY src src
 
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJAR
+RUN ./gradlew bootJar
+
 
 FROM openjdk:17
 
