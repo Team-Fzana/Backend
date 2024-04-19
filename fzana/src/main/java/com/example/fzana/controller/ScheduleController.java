@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/v1")
+//@RestController
+//@RequiredArgsConstructor
+//@RequestMapping("/api/v1")
 public class ScheduleController {
-
     private final ScheduleService scheduleService;
 
     // 1. todo-list, 일정 모두 조회
@@ -58,5 +57,4 @@ public class ScheduleController {
     }
 
     // 5. todo-list 진행 체크(변경) -> 생각해보니 진행 체크(완료, 진행 중, 미 진행)은 todo-list 수정에서 할 수 있지 않을까? 라는 생각이 드네요
-
 }
