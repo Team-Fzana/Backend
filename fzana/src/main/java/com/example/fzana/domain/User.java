@@ -42,8 +42,8 @@ public class User {
     @Column
     private String introduce;
 
-//    @Column
-//    private String userPhoto;
+    @Column
+    private String userPhoto;
 //
 //    @Enumerated(EnumType.STRING)
 //    private States state=States.STOP; //기본값 설정? 이렇게 하는 게 맞는지 잘 모르겠다
@@ -74,6 +74,7 @@ public class User {
         this.introduce=introduce;
     }
 
+
     private void validateEmail(final String email) {     //이메일 형식 검사
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
@@ -95,5 +96,9 @@ public class User {
     // 소개글 등록 & 수정
     public void updateIntroduce(IntroduceRequest introduceRequest) {
         this.introduce = introduceRequest.getIntroduce();
+    }
+
+    public void updateProfile(String fileUrl) {
+        this.userPhoto = fileUrl;
     }
 }

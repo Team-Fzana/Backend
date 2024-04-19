@@ -1,23 +1,35 @@
 package com.example.fzana.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.fzana.domain.User;
 import com.example.fzana.dto.*;
 import com.example.fzana.exception.InvalidUserException;
 import com.example.fzana.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
+    // s3 버킷 클라이언트
+    private final AmazonS3Client s3Client;
+
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AmazonS3Client s3Client) {
         this.userRepository=userRepository;
+        this.s3Client = s3Client;
 
     }
 
@@ -103,5 +115,44 @@ public class UserService {
 
         return UserinfoResponse.createUserinfoDto(user.getNickName(), user.getIntroduce());
 
+    }
+
+
+    /*
+     * 사용자 프로필 사진 등록 로직 (s3)
+     */
+    public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long userId) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+
+        String fileUrl = uploadFileToS3Bucket(bucketName, multipartFile);
+
+        user.updateProfile(fileUrl);
+
+        userRepository.save(user);
+
+        return fileUrl;
+    }
+
+    // S3에 업로드 하기
+    private String uploadFileToS3Bucket(String bucketName, MultipartFile multipartFile) throws IOException {
+        File file = convertMultiPartToFile(multipartFile);
+        String fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
+
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file));
+        file.delete(); // 임시 파일 삭제
+
+        return s3Client.getResourceUrl(bucketName, fileName); // s3에 저장된 파일의 Url 받기
+    }
+
+    // MultiPart 를 파일로 변환 (임시 파일 생성)
+    private File convertMultiPartToFile(MultipartFile multipartFile) throws IOException {
+        File convFile = new File(multipartFile.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(convFile);
+
+        fos.write(multipartFile.getBytes());
+        fos.close();
+
+        return convFile;
     }
 }
