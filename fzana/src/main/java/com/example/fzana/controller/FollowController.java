@@ -14,16 +14,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/member")
 public class FollowController {
 
     @Autowired
     private FollowService followService;
 
-    @PostMapping("/{userId}/following/{targetUserId}")
+    @PostMapping("/{memberId}/following/{targetMemberId}")
     @Operation(summary = "사용자 팔로우", description = "사용자 ID를 사용하여 다른 사용자를 팔로우합니다.")
-    public ResponseEntity<?> createFollow(@PathVariable Long userId, @PathVariable Long targetUserId) {
-        FollowForm followForm = new FollowForm(userId, targetUserId);
+    public ResponseEntity<?> createFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
+        FollowForm followForm = new FollowForm(memberId, targetMemberId);
         try {
             String message = followService.createFollow(followForm);
             return ResponseEntity.ok(Map.of("message", message));
@@ -32,15 +32,15 @@ public class FollowController {
         }
     }
 
-    @GetMapping("/{userId}/following")
+    @GetMapping("/{memberId}/following")
     @Operation(summary = "팔로잉 목록 조회", description = "사용자 ID를 사용하여 해당 사용자가 팔로잉하고 있는 모든 사용자의 목록을 조회합니다.")
-    public ResponseEntity<?> getFollowingList(@PathVariable Long userId) {
+    public ResponseEntity<?> getFollowingList(@PathVariable Long memberId) {
         try {
-            List<Follow> followingList = followService.getFollowingList(userId);
+            List<Follow> followingList = followService.getFollowingList(memberId);
             List<Map<String, Object>> result = followingList.stream().map(follow -> {
                 Map<String, Object> map = new HashMap<>();
                 map.put("followingId", follow.getFollowing().getId());
-                map.put("name", follow.getFollowing().getNickName()); // User 클래스에 getNickName() 메서드가 있다고 가정
+                map.put("name", follow.getFollowing().getNickName()); // Member 클래스에 getNickName() 메서드가 있다고 가정
                 return map;
             }).collect(Collectors.toList());
 
@@ -54,17 +54,17 @@ public class FollowController {
         }
     }
 
-    @GetMapping("/{userId}/followers")
+    @GetMapping("/{memberId}/followers")
     @Operation(summary = "팔로워 목록 조회", description = "사용자 ID를 사용하여 해당 사용자를 팔로우하고 있는 모든 사용자의 목록을 조회합니다.")
-    public ResponseEntity<?> getFollowerList(@PathVariable Long userId) {
+    public ResponseEntity<?> getFollowerList(@PathVariable Long memberId) {
         try {
             // 팔로워 목록 조회
-            List<Follow> followersList = followService.getFollowerList(userId);
+            List<Follow> followersList = followService.getFollowerList(memberId);
             // 조회한 목록을 Map으로 변환
             List<Map<String, Object>> result = followersList.stream().map(follow -> {
                 Map<String, Object> map = new HashMap<>();
                 map.put("followerId", follow.getFollower().getId());
-                map.put("name", follow.getFollower().getNickName()); // User 클래스에 getNickName() 메서드가 있다고 가정
+                map.put("name", follow.getFollower().getNickName()); // Member 클래스에 getNickName() 메서드가 있다고 가정
                 return map;
             }).collect(Collectors.toList());
 
@@ -83,11 +83,11 @@ public class FollowController {
 
 
 
-    @DeleteMapping("/{userId}/unfollow/{targetUserId}")
+    @DeleteMapping("/{memberId}/unfollow/{targetMemberId}")
     @Operation(summary = "사용자 언팔로우", description = "사용자 ID와 대상 사용자 ID를 사용하여 팔로우를 취소합니다.")
-    public ResponseEntity<?> deleteFollow(@PathVariable Long userId, @PathVariable Long targetUserId) {
+    public ResponseEntity<?> deleteFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
         try {
-            String message = followService.cancelFollow(userId, targetUserId);
+            String message = followService.cancelFollow(memberId, targetMemberId);
             return ResponseEntity.ok(Map.of("message", message));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

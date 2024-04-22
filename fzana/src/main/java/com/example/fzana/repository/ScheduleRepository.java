@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query(value = "SELECT * FROM schedule WHERE user_id = :userId",
+    @Query(value = "SELECT * FROM schedule WHERE member_id = :memberId",
             nativeQuery = true)
-    List<Schedule> findByUserId(Long userId);
+    List<Schedule> findByMemberId(Long memberId);
 }
