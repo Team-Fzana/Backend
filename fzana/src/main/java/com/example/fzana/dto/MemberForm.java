@@ -1,18 +1,17 @@
 package com.example.fzana.dto;
 
 
-import com.example.fzana.domain.States;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UserForm {
+public class MemberForm {
 
     private String email;
     private String password;
     private String introduce;
     private String nickName;
-//    private String userPhoto;
+//    private String memberPhoto;
 //    private States states;
 
 }
