@@ -1,6 +1,6 @@
 package com.example.fzana.dto;
 
-import com.example.fzana.domain.User;
+import com.example.fzana.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
 public class IntroduceResponse {
     private String introduce;
 
-    public static IntroduceResponse createIntroduceDto(User updated) {
+    public static IntroduceResponse createIntroduceDto(Member updated) {
         return new IntroduceResponse(updated.getIntroduce());
     }
 }

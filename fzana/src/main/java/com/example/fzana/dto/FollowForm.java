@@ -3,15 +3,15 @@ package com.example.fzana.dto;
 import java.time.LocalDateTime;
 
 public class FollowForm {
-    private Long userId;
-    private Long targetUserId;
+    private Long memberId;
+    private Long targetMemberId;
     private LocalDateTime timestamp;
 
-    public FollowForm(Long userId, Long targetUserId) {
-        validateId(userId, "사용자");
-        validateId(targetUserId, "대상 사용자");
-        this.userId = userId;
-        this.targetUserId = targetUserId;
+    public FollowForm(Long memberId, Long targetMemberId) {
+        validateId(memberId, "사용자");
+        validateId(targetMemberId, "대상 사용자");
+        this.memberId = memberId;
+        this.targetMemberId = targetMemberId;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -24,12 +24,12 @@ public class FollowForm {
         }
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getmemberId() {
+        return memberId;
     }
 
-    public Long getTargetUserId() {
-        return targetUserId;
+    public Long getTargetMemberId() {
+        return targetMemberId;
     }
 
     public static class FollowingDTO {
