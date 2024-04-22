@@ -2,7 +2,6 @@ package com.example.fzana.domain;
 
 import com.example.fzana.dto.ScheduleRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +18,9 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // User 테이블 ID 와 다대일 관계
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY) // Member 테이블 ID 와 다대일 관계
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column
     private String content;
@@ -51,8 +50,8 @@ public class Schedule {
     private Date updatedAt;
 
 
-    public Schedule(User user, String content, int checkStatus, LocalDateTime thisDay, Date startTime, Date endTime) {
-        this.user = user;
+    public Schedule(Member member, String content, int checkStatus, LocalDateTime thisDay, Date startTime, Date endTime) {
+        this.member = member;
         this.content = content;
         this.thisDay = thisDay;
         this.checkStatus = checkStatus;
@@ -61,9 +60,9 @@ public class Schedule {
     }
 
     // DTO 데이터로 엔티티 생성
-    public static Schedule createSchedule(User user, ScheduleRequest scheduleRequest) {
+    public static Schedule createSchedule(Member member, ScheduleRequest scheduleRequest) {
         return new Schedule(
-                user,
+                member,
                 scheduleRequest.getContent(),
                 scheduleRequest.getCheckStatus(),
                 scheduleRequest.getThisDay(),

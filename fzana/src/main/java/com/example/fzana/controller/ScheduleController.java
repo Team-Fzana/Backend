@@ -17,20 +17,20 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     // 1. todo-list, 일정 모두 조회
-    @GetMapping("/calendar/{userId}")
-    public ResponseEntity<List<ScheduleResponse>> allTodoLists(@PathVariable Long userId){
+    @GetMapping("/calendar/{memberId}")
+    public ResponseEntity<List<ScheduleResponse>> allTodoLists(@PathVariable Long memberId){
         // 서비스에 위임
-        List<ScheduleResponse> scheduleList = scheduleService.scheduleList(userId);
+        List<ScheduleResponse> scheduleList = scheduleService.scheduleList(memberId);
         // 결과 응답
         return ResponseEntity.status(HttpStatus.OK).body(scheduleList);
     }
 
     // 2. todo-list 추가
-    @PostMapping("/user/{userId}/todo-list")
-    public ResponseEntity<ScheduleResponse> createTodoList(@PathVariable Long userId,
+    @PostMapping("/member/{memberId}/todo-list")
+    public ResponseEntity<ScheduleResponse> createTodoList(@PathVariable Long memberId,
                                                           @RequestBody ScheduleRequest scheduleRequest){
         // 서비스에 위임
-        ScheduleResponse createdSchedule = scheduleService.createSchedule(userId, scheduleRequest);
+        ScheduleResponse createdSchedule = scheduleService.createSchedule(memberId, scheduleRequest);
         // 결과 응답
         return (createdSchedule != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(createdSchedule) :

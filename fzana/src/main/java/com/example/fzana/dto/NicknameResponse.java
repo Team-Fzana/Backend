@@ -1,6 +1,6 @@
 package com.example.fzana.dto;
 
-import com.example.fzana.domain.User;
+import com.example.fzana.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ public class NicknameResponse {
 
     private String nickname;
 
-    public static NicknameResponse createNicknameDto(User updated) {
+    public static NicknameResponse createNicknameDto(Member updated) {
         return new NicknameResponse(updated.getNickName());
     }
 }

@@ -16,11 +16,11 @@ public class Follow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id")
-    private User following;
+    private Member following;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "follower_id")
-    private User follower;
+    private Member follower;
 
     @Column(name = "created_at") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가

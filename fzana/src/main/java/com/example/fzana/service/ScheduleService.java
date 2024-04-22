@@ -1,11 +1,11 @@
 package com.example.fzana.service;
 
 import com.example.fzana.domain.Schedule;
-import com.example.fzana.domain.User;
+import com.example.fzana.domain.Member;
 import com.example.fzana.dto.ScheduleRequest;
 import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.repository.ScheduleRepository;
-import com.example.fzana.repository.UserRepository;
+import com.example.fzana.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final UserRepository userRepository;        // 수연이가 해줄거임
+    private final MemberRepository memberRepository;        // 수연이가 해줄거임
 
 
 
@@ -25,9 +25,9 @@ public class ScheduleService {
     /*
      * todo-list, 일정 리스트 조회
      */
-    public List<ScheduleResponse> scheduleList(Long userId) {
+    public List<ScheduleResponse> scheduleList(Long memberId) {
         // 1. 일정 & todo-list 조회
-        List<Schedule> schedules = scheduleRepository.findByUserId(userId);
+        List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
 
         // 2. 엔티티 -> DTO 변환
         List<ScheduleResponse> dtos = new ArrayList<ScheduleResponse>();
@@ -43,14 +43,14 @@ public class ScheduleService {
     /*
      * 일정 추가
      */
-    public ScheduleResponse createSchedule(Long userId, ScheduleRequest scheduleRequest) {
+    public ScheduleResponse createSchedule(Long memberId, ScheduleRequest scheduleRequest) {
         // 1. 사용자 id 조회 및 예외 처리
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("일정 & todo-list 추가 실패! " +
                         "해당 사용자가 없습니다."));
 
         // 2. 일정 엔티티 생성
-        Schedule schedule = Schedule.createSchedule(user, scheduleRequest);
+        Schedule schedule = Schedule.createSchedule(member, scheduleRequest);
 
         // 3. 일정 엔티티를 DB에 저장
         Schedule created = scheduleRepository.save(schedule);
