@@ -2,6 +2,8 @@ package com.example.fzana.controller;
 
 import com.example.fzana.domain.Member;
 import com.example.fzana.dto.*;
+import com.example.fzana.exception.InvalidMemberException;
+import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 
 @RestController
@@ -27,30 +31,39 @@ public class MemberController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "이메일, 비밀번호, 닉네임, 소개글을 등록하여 회원가입을 합니다.")
     public ResponseEntity<Member> signUp(@RequestBody MemberForm memberForm) {
-        Member member = memberService.signUp(
-                memberForm.getEmail(),
-                memberForm.getPassword(),
-                memberForm.getNickName(),
-                memberForm.getIntroduce()
-        );
-        return ResponseEntity.ok(member);
+            Member member = memberService.signUp(
+                    memberForm.getEmail(),
+                    memberForm.getPassword(),
+                    memberForm.getNickName(),
+                    memberForm.getIntroduce()
+            );
+            return ResponseEntity.ok(member);
     }
 
     // 이메일 중복 확인
     @GetMapping("/valid")
     @Operation(summary = "유효성 검사", description = "이메일 형식, 중복 확인을 합니다.")
-    public ResponseEntity<String> checkDuplicateEmail(@RequestParam String email) {
-        memberService.validateDuplicateEmail(email);
-        return ResponseEntity.ok("사용 가능한 이메일입니다.");
+    public ResponseEntity<?> checkDuplicateEmail(@RequestParam String email) {
+        try{
+            memberService.validateDuplicateEmail(email);
+            return ResponseEntity.ok("사용 가능한 이메일입니다.");
+        } catch (InvalidMemberException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "중복된 이메일 입니다."));
+        }
+
     }
 
 
     // 로그인
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "이메일, 비밀번호로 로그인 합니다.")
-    public ResponseEntity<Member> signIn(@RequestParam String email, @RequestParam String password) {
-        Member member = memberService.signIn(email,password);
-        return ResponseEntity.ok(member);
+    public ResponseEntity<?> signIn(@RequestParam String email, @RequestParam String password) {
+        try{
+            Member member = memberService.signIn(email,password);
+            return ResponseEntity.ok(member);
+        } catch (InvalidMemberException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "아이디 혹은 비밀번호가 올바르지 않습니다."));
+        }
     }
 
     @PostMapping("/logout")
@@ -63,29 +76,42 @@ public class MemberController {
     // 사용자 정보 불러오기
     @GetMapping("/members/{memberId}")
     @Operation(summary = "사용자 정보 불러오기", description = "사용자의 불러옵니다.")
-    public ResponseEntity<MemberInfoResponse> memberInfo(@PathVariable Long memberId){
-        MemberInfoResponse infos = memberService.bringInfo(memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(infos);
+    public ResponseEntity<?> memberInfo(@PathVariable Long memberId){
+        try{
+            MemberInfoResponse infos = memberService.bringInfo(memberId);
+            return ResponseEntity.status(HttpStatus.OK).body(infos);
+        } catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "올바른 사용자가 아닙니다."));
+
+        }
+
     }
 
     // 사용자 닉네임 수정
     @PostMapping("/members/{memberId}/nickname")
     @Operation(summary = "사용자 닉네임 수정", description = "사용자의 닉네임을 수정합니다.")
-    public ResponseEntity<NicknameResponse> submitNickname(@PathVariable Long memberId,
+    public ResponseEntity<?> submitNickname(@PathVariable Long memberId,
                                                            @RequestBody NicknameRequest nicknameRequest){
-        NicknameResponse updated = memberService.submitNickname(memberId, nicknameRequest);
+        try {
+            NicknameResponse updated = memberService.submitNickname(memberId, nicknameRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(updated);
+        } catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "올바른 사용자가 아닙니다."));
 
-        return ResponseEntity.status(HttpStatus.OK).body(updated);
+        }
     }
 
     // 사용자 소개글 입력 & 수정
     @PostMapping("/members/{memberId}/introduce")
     @Operation(summary = "사용자 소개글 수정", description = "사용자의 소개글을 수정합니다.")
-    public ResponseEntity<IntroduceResponse> submitNickname(@PathVariable Long memberId,
+    public ResponseEntity<?> submitNickname(@PathVariable Long memberId,
                                                             @RequestBody IntroduceRequest introduceRequest){
-        IntroduceResponse updated = memberService.submitIntroduce(memberId, introduceRequest);
-
-        return ResponseEntity.status(HttpStatus.OK).body(updated);
+        try{
+            IntroduceResponse updated = memberService.submitIntroduce(memberId, introduceRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(updated);
+        } catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "올바른 사용자가 아닙니다."));
+        }
     }
 
     // 사용자 프로필 입력 & 수정

@@ -4,6 +4,8 @@ import com.example.fzana.domain.Schedule;
 import com.example.fzana.domain.Member;
 import com.example.fzana.dto.ScheduleRequest;
 import com.example.fzana.dto.ScheduleResponse;
+import com.example.fzana.exception.MemberNotFoundException;
+import com.example.fzana.exception.ScheduleNotFoundException;
 import com.example.fzana.repository.ScheduleRepository;
 import com.example.fzana.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +21,13 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;        // 수연이가 해줄거임
 
-
-
-
     /*
      * todo-list, 일정 리스트 조회
      */
     public List<ScheduleResponse> scheduleList(Long memberId) {
+        // 사용자 조회 및 예외 처리
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
         // 1. 일정 & todo-list 조회
         List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
 
@@ -46,8 +48,8 @@ public class ScheduleService {
     public ScheduleResponse createSchedule(Long memberId, ScheduleRequest scheduleRequest) {
         // 1. 사용자 id 조회 및 예외 처리
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("일정 & todo-list 추가 실패! " +
-                        "해당 사용자가 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
+
 
         // 2. 일정 엔티티 생성
         Schedule schedule = Schedule.createSchedule(member, scheduleRequest);
@@ -63,11 +65,10 @@ public class ScheduleService {
     /*
     * 일정 수정
     * */
-    public ScheduleResponse updateSchedule(Long todolistId, ScheduleRequest scheduleRequest) {
+    public ScheduleResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest) {
         // 1. 일정 조회 및 예외 처리
-        Schedule target = scheduleRepository.findById(todolistId)
-                .orElseThrow(() -> new IllegalArgumentException("일정 수정 실패!"+
-                        "대상 일정이 없습니다."));
+        Schedule target = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule with ID " + scheduleId + " not found."));
 
         // 2. 일정 정보 수정
         target.patch(scheduleRequest);
@@ -82,11 +83,10 @@ public class ScheduleService {
     /*
      * 일정 삭제
      * */
-    public ScheduleResponse delete(Long todolistId) {
+    public ScheduleResponse delete(Long scheduleId) {
         // 1. 일정 조회 및 예외 처리
-        Schedule target = scheduleRepository.findById(todolistId)
-                .orElseThrow(() -> new IllegalArgumentException("일정 삭제 실패!"+
-                        "대상 일정이 없습니다."));
+        Schedule target = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule with ID " + scheduleId + " not found."));
 
         // 2. 일정 삭제
         scheduleRepository.delete(target);
