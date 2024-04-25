@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.fzana.domain.Member;
 import com.example.fzana.dto.*;
 import com.example.fzana.exception.InvalidMemberException;
+import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class MemberService {
      */
     public NicknameResponse submitNickname(Long memberId, NicknameRequest nicknameRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         member.updateNickname(nicknameRequest);
 
@@ -95,7 +96,7 @@ public class MemberService {
      */
     public IntroduceResponse submitIntroduce(Long memberId, IntroduceRequest introduceRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         member.updateIntroduce(introduceRequest);
 
@@ -109,7 +110,7 @@ public class MemberService {
      */
     public MemberInfoResponse bringInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce());
 
@@ -121,7 +122,7 @@ public class MemberService {
      */
     public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         String fileUrl = uploadFileToS3Bucket(bucketName, multipartFile);
 
