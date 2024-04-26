@@ -4,6 +4,7 @@ import com.example.fzana.dto.ScheduleRequest;
 import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,4 +63,9 @@ public class ScheduleController {
     }
 
     // 5. schedule 진행 체크(변경) -> 생각해보니 진행 체크(완료, 진행 중, 미 진행)은 schedule 수정에서 할 수 있지 않을까
+
+
+
 }
+
+

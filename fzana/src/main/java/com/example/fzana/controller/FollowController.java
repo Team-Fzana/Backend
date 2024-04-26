@@ -2,6 +2,7 @@ package com.example.fzana.controller;
 
 import com.example.fzana.domain.Follow;
 import com.example.fzana.dto.FollowForm;
+import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,8 +82,6 @@ public class FollowController {
     }
 
 
-
-
     @DeleteMapping("/{memberId}/unfollow/{targetMemberId}")
     @Operation(summary = "사용자 언팔로우", description = "사용자 ID와 대상 사용자 ID를 사용하여 팔로우를 취소합니다.")
     public ResponseEntity<?> deleteFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
@@ -91,6 +90,17 @@ public class FollowController {
             return ResponseEntity.ok(Map.of("message", message));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/{userId}/friends/{friendId}/calendars")
+    @Operation(summary = "친구의 캘린더 전체 조회", description = "인증된 사용자가 특정 친구의 캘린더를 조회할 수 있습니다.사용자 ID와 친구의 ID를 통해 친구의 모든 캘린더 정보를 반환합니다. 사용자와 친구 사이의 관계가 확인된 후에 접근이 허용됩니다.")
+    public ResponseEntity<?> getFriendCalendars(@PathVariable Long userId, @PathVariable Long friendId) {
+        try {
+            List<ScheduleResponse> calendars = followService.getFriendCalendars(userId, friendId);
+            return ResponseEntity.ok(calendars);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
         }
     }
 }

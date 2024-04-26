@@ -11,3 +11,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             nativeQuery = true)
     List<Schedule> findByMemberId(Long memberId);
 }
+
+
