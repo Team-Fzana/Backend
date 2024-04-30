@@ -114,7 +114,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
-        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce());
+        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto());
 
     }
 
