@@ -8,8 +8,9 @@ import lombok.Getter;
 public class MemberInfoResponse {
     private String nickname;
     private String introduce;
+    private String memberPhoto;
 
-    public static MemberInfoResponse createMemberinfoDto(String nickName, String introduce) {
-        return new MemberInfoResponse(nickName, introduce);
+    public static MemberInfoResponse createMemberinfoDto(String nickName, String introduce, String memberPhoto) {
+        return new MemberInfoResponse(nickName, introduce, memberPhoto);
     }
 }
