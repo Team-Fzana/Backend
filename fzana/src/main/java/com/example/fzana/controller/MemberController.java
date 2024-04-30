@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -116,7 +117,7 @@ public class MemberController {
 
     // 사용자 프로필 입력 & 수정
     @PostMapping(value = "/members/{memberId}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "사용자 프로필 사진 수정", description = "사용자의 프로필 사진을.")
+    @Operation(summary = "사용자 프로필 사진 수정", description = "사용자의 프로필 사진을 수정합니다.")
     public ResponseEntity<String> fileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long memberId) {
         try {
             String bucketName = "fzana"; // S3 버킷 이름 설정
@@ -125,6 +126,17 @@ public class MemberController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/api/v1/members/search")
+    @Operation(summary = "사용자 검색", description = "사용자 검색 결과를 가져옵니다.")
+    public ResponseEntity<?> searchMember(@RequestParam String nickNameOrEmail) {
+            // 서비스에 위임
+            List<MemberListResponse> memberList  = memberService.bringMemberList(nickNameOrEmail);
+            // 검색한 리스트 결과 반환
+            return (memberList != null) ?
+                    ResponseEntity.status(HttpStatus.OK).body(memberList) // 리스트 반환
+                    : ResponseEntity.status(HttpStatus.NO_CONTENT).body(null); // 없으면 null 값 반환
     }
 
 }
