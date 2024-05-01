@@ -2,6 +2,7 @@ package com.example.fzana.controller;
 
 import com.example.fzana.domain.Follow;
 import com.example.fzana.dto.FollowForm;
+import com.example.fzana.dto.FollowResponse;
 import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/member")
+@RequestMapping("/api/v1/follow")
 public class FollowController {
 
     @Autowired
@@ -23,13 +25,13 @@ public class FollowController {
 
     @PostMapping("/{memberId}/following/{targetMemberId}")
     @Operation(summary = "사용자 팔로우", description = "사용자 ID를 사용하여 다른 사용자를 팔로우합니다.")
-    public ResponseEntity<?> createFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
+    public ResponseEntity<FollowResponse.MessageResponse> createFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
         FollowForm followForm = new FollowForm(memberId, targetMemberId);
         try {
             String message = followService.createFollow(followForm);
-            return ResponseEntity.ok(Map.of("message", message));
+            return ResponseEntity.ok(new FollowResponse.MessageResponse(message));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(new FollowResponse.MessageResponse(e.getMessage()));
         }
     }
 
@@ -94,13 +96,14 @@ public class FollowController {
     }
 
     @GetMapping("/{userId}/friends/{friendId}/calendars")
-    @Operation(summary = "친구의 캘린더 전체 조회", description = "인증된 사용자가 특정 친구의 캘린더를 조회할 수 있습니다.사용자 ID와 친구의 ID를 통해 친구의 모든 캘린더 정보를 반환합니다. 사용자와 친구 사이의 관계가 확인된 후에 접근이 허용됩니다.")
-    public ResponseEntity<?> getFriendCalendars(@PathVariable Long userId, @PathVariable Long friendId) {
+    public ResponseEntity<List<ScheduleResponse>> getFriendCalendars(@PathVariable Long userId, @PathVariable Long friendId) {
         try {
             List<ScheduleResponse> calendars = followService.getFriendCalendars(userId, friendId);
             return ResponseEntity.ok(calendars);
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
+            // 오류 메시지를 담은 ScheduleResponse 객체를 생성하여 리스트에 추가
+            ScheduleResponse errorResponse = new ScheduleResponse(e.getMessage());
+            return ResponseEntity.status(404).body(Collections.singletonList(errorResponse));
         }
     }
 }
