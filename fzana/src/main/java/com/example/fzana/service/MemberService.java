@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.fzana.domain.Member;
 import com.example.fzana.dto.*;
 import com.example.fzana.exception.InvalidMemberException;
+import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +31,6 @@ public class MemberService {
     public MemberService(MemberRepository memberRepository, AmazonS3Client s3Client) {
         this.memberRepository = memberRepository;
         this.s3Client = s3Client;
-
     }
 
     /*
@@ -81,7 +83,7 @@ public class MemberService {
      */
     public NicknameResponse submitNickname(Long memberId, NicknameRequest nicknameRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         member.updateNickname(nicknameRequest);
 
@@ -95,7 +97,7 @@ public class MemberService {
      */
     public IntroduceResponse submitIntroduce(Long memberId, IntroduceRequest introduceRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         member.updateIntroduce(introduceRequest);
 
@@ -109,9 +111,9 @@ public class MemberService {
      */
     public MemberInfoResponse bringInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
-        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce());
+        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto());
 
     }
 
@@ -121,7 +123,7 @@ public class MemberService {
      */
     public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 사용자"));
+                .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
         String fileUrl = uploadFileToS3Bucket(bucketName, multipartFile);
 
@@ -152,5 +154,23 @@ public class MemberService {
         fos.close();
 
         return convFile;
+    }
+
+    /*
+    * 사용자 검색 결과 리스트 불러오기
+    */
+    public List<MemberListResponse> bringMemberList(String nickNameOrEmail) {
+        // 사용자 조회
+        List<Member> bringMembers = memberRepository.findByNicknameOrEmail(nickNameOrEmail);
+
+        // 엔티티 -> DTO 변환
+        List<MemberListResponse> dtos = new ArrayList<>();
+        for (int i = 0; i < bringMembers.size(); i++){ // 1. 조회한 사용자 엔티티 수 만큼 반복
+            Member m = bringMembers.get(i);            // 2. 조회한 사용자 엔티티 하나씩 가져오기
+            MemberListResponse dto = MemberListResponse.createMember(m); // 3. 엔티티를 DTO로 변환
+            dtos.add(dto);                             // 4. 변환한 DTO를 dtos 리스트에 삽입
+        }
+
+        return dtos;
     }
 }
