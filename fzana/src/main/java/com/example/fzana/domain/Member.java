@@ -21,12 +21,6 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-//    @OneToMany(mappedBy = "member") // Schedule 테이블과 일대다 관계
-//    private List<Schedule> schedules = new ArrayList<>();
-//
-//    @OneToMany // Follow 테이블과 일대다 관계
-//    private List<Follow> follows = new ArrayList<>();
-
     @Column(name="email", nullable = false)
     private String email;
 
@@ -41,21 +35,6 @@ public class Member {
 
     @Column
     private String memberPhoto;
-//
-//    @Enumerated(EnumType.STRING)
-//    private States state=States.STOP; //기본값 설정? 이렇게 하는 게 맞는지 잘 모르겠다
-
-//    @Column(name = "created_at") //BaseEntity 클래스 추가해도 됨
-//    @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
-//    private LocalDateTime createdAt;
-//
-//    @Column(name = "updated_at")
-//    @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
-//    private LocalDateTime updatedAt;
-//
-//    @Column(name = "deleted_at")
-//    @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
-//    private LocalDateTime deletedAt;
 
     protected Member() {
     }
