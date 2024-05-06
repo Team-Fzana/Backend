@@ -31,7 +31,6 @@ public class MemberService {
     public MemberService(MemberRepository memberRepository, AmazonS3Client s3Client) {
         this.memberRepository = memberRepository;
         this.s3Client = s3Client;
-
     }
 
     /*
