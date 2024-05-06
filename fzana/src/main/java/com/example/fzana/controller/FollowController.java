@@ -95,10 +95,10 @@ public class FollowController {
         }
     }
 
-    @GetMapping("/{userId}/friends/{friendId}/calendars")
-    public ResponseEntity<List<ScheduleResponse>> getFriendCalendars(@PathVariable Long userId, @PathVariable Long friendId) {
+    @GetMapping("/{memberId}/friends/{friendId}/calendars")
+    public ResponseEntity<List<ScheduleResponse>> getFriendCalendars(@PathVariable Long memberId, @PathVariable Long friendId) {
         try {
-            List<ScheduleResponse> calendars = followService.getFriendCalendars(userId, friendId);
+            List<ScheduleResponse> calendars = followService.getFriendCalendars(memberId, friendId);
             return ResponseEntity.ok(calendars);
         } catch (Exception e) {
             // 오류 메시지를 담은 ScheduleResponse 객체를 생성하여 리스트에 추가
