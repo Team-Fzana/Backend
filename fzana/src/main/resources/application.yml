@@ -1,7 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: " jdbc:mysql://localhost:3307/to_do?useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
+    url: "jdbc:mysql://localhost:3307/to_do?useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
+
     username: "root"
     password: "12345678"
   jpa:
@@ -15,7 +16,7 @@ spring:
         show_sql: true
   sql:
     init:
-      data-locations: classpath*:db/data.sql
+      data-locations: "classpath*:db/data.sql"
       mode: always
 
   profiles:

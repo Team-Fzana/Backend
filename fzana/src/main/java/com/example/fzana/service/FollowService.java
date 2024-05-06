@@ -2,9 +2,13 @@ package com.example.fzana.service;
 
 import com.example.fzana.domain.Follow;
 import com.example.fzana.domain.Member;
+import com.example.fzana.domain.Schedule;
 import com.example.fzana.dto.FollowForm;
+import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.repository.FollowRepository;
 import com.example.fzana.repository.MemberRepository;
+import com.example.fzana.repository.ScheduleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,9 @@ public class FollowService {
 
     @Autowired
     private FollowRepository followRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     public String createFollow(FollowForm followForm) {
         Long memberId = followForm.getmemberId();
@@ -67,5 +74,21 @@ public class FollowService {
                 .orElseThrow(() -> new IllegalStateException("Follow not found"));
         followRepository.delete(follow);
         return "Follow successfully cancelled";
+    }
+
+    // Method to fetch a friend's calendar
+    public List<ScheduleResponse> getFriendCalendars(Long userId, Long friendId) throws IllegalAccessException, EntityNotFoundException {
+        Member user = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Member friend = memberRepository.findById(friendId).orElseThrow(() -> new IllegalArgumentException("Friend not found"));
+
+        Optional<Follow> followCheck = followRepository.findByFollowerAndFollowing(user, friend);
+        if (followCheck.isEmpty()) {
+            throw new IllegalAccessException("You do not have permission to access this friend's calendar");
+        }
+
+        List<Schedule> schedules = scheduleRepository.findByMemberId(friend.getId());
+        return schedules.stream()
+                .map(ScheduleResponse::createSchedule)
+                .collect(Collectors.toList());
     }
 }
