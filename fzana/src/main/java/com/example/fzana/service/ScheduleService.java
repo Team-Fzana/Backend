@@ -8,11 +8,13 @@ import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.exception.ScheduleNotFoundException;
 import com.example.fzana.repository.ScheduleRepository;
 import com.example.fzana.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -95,5 +97,6 @@ public class ScheduleService {
         return ScheduleResponse.createSchedule(target);
 
     }
+
 
 }
