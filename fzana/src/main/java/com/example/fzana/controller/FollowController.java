@@ -1,5 +1,6 @@
 package com.example.fzana.controller;
 
+import com.amazonaws.Response;
 import com.example.fzana.domain.Follow;
 import com.example.fzana.dto.FollowForm;
 import com.example.fzana.dto.FollowResponse;
@@ -95,7 +96,20 @@ public class FollowController {
         }
     }
 
+    @DeleteMapping("/{memberId}/unfollwer/{targetMemberId}")
+    @Operation(summary = "내 팔로워 삭제", description = "사용자 Id와 대상 사용자 ID를 사용하여 팔로워를 삭제합니다.")
+    public ResponseEntity<?> deleteFollwer(@PathVariable Long memberId, @PathVariable Long targetMemberId){
+        try {
+            String message = followService.cancelFollwer(memberId, targetMemberId);
+            return ResponseEntity.ok(Map.of("message", message));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+
     @GetMapping("/{memberId}/friends/{friendId}/calendars")
+    @Operation(summary = "친구 캘린더 조회", description = "사용자 ID와 사용자가 팔로우한 ID를 사용해 친구의 일정을 조회합니다.")
     public ResponseEntity<List<ScheduleResponse>> getFriendCalendars(@PathVariable Long memberId, @PathVariable Long friendId) {
         try {
             List<ScheduleResponse> calendars = followService.getFriendCalendars(memberId, friendId);
