@@ -106,4 +106,19 @@ public class ScheduleService {
                 .map(ScheduleResponse::createSchedule)
                 .collect(Collectors.toList());
     }
+
+    public List<ScheduleResponse> getScheduleForDate(Long memberId, LocalDate date) {
+        // 사용자 조회 및 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
+
+        // 특정 날짜에 해당하는 스케줄 조회
+        List<Schedule> schedules = scheduleRepository.findByMemberIdAndDate(memberId, date);
+
+        // 조회한 스케줄을 DTO로 변환하여 반환
+        return schedules.stream()
+                .map(ScheduleResponse::createSchedule)
+                .collect(Collectors.toList());
+    }
+
 }
