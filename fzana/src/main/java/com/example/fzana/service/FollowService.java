@@ -5,6 +5,7 @@ import com.example.fzana.domain.Member;
 import com.example.fzana.domain.Schedule;
 import com.example.fzana.dto.FollowForm;
 import com.example.fzana.dto.ScheduleResponse;
+import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.repository.FollowRepository;
 import com.example.fzana.repository.MemberRepository;
 import com.example.fzana.repository.ScheduleRepository;
@@ -68,6 +69,7 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
+    // 팔로잉 삭제
     public String cancelFollow(Long memberId, Long targetMemberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
         Member targetMember = memberRepository.findById(targetMemberId).orElseThrow(() -> new IllegalArgumentException("Target member not found"));
@@ -75,6 +77,18 @@ public class FollowService {
                 .orElseThrow(() -> new IllegalStateException("Follow not found"));
         followRepository.delete(follow);
         return "Follow successfully cancelled";
+    }
+
+    // 팔로워 삭제
+    public String cancelFollwer(Long memberId, Long targetMemberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
+        Member targetMember = memberRepository.findById(targetMemberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
+        Follow follow = followRepository.findByFollowingAndFollower(member, targetMember)
+                .orElseThrow(() -> new IllegalStateException("Follower not found"));
+        followRepository.delete(follow);
+        return "Follower successfully deleted";
     }
 
     // Method to fetch a friend's calendar
@@ -99,10 +113,5 @@ public class FollowService {
 
         return followRepository.existsByFollowerIdAndFollowingId(member.getId(), targetMember.getId());
     }
-
-
-
-
-
 
 }
