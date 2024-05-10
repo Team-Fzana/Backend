@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -91,4 +92,17 @@ public class FollowService {
                 .map(ScheduleResponse::createSchedule)
                 .collect(Collectors.toList());
     }
+
+    public boolean isFollowing(Long memberId, Long targetMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        Member targetMember = memberRepository.findById(targetMemberId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다"));
+
+        return followRepository.existsByFollowerIdAndFollowingId(member.getId(), targetMember.getId());
+    }
+
+
+
+
+
+
 }
