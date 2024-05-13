@@ -87,4 +87,10 @@ public class Schedule {
         this.startTime = scheduleRequest.getStartTime(); // 시작 시간 변경
         this.endTime = scheduleRequest.getEndTime(); //종료 시간 변경
     }
+
+    // 스케줄이 오늘 날짜인지 확인하는 메서드
+    public boolean isToday() {
+        LocalDateTime today = LocalDateTime.now(); // 현재 날짜와 시간 가져오기
+        return thisDay.toLocalDate().isEqual(today.toLocalDate()); // 스케줄의 날짜와 현재 날짜 비교
+    }
 }

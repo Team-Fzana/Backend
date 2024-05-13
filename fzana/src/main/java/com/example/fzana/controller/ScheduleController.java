@@ -4,14 +4,18 @@ import com.example.fzana.dto.ScheduleRequest;
 import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.exception.ScheduleNotFoundException;
+import com.example.fzana.service.FollowService;
 import com.example.fzana.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private FollowService followService;
 
     // 1. schedule 모두 조회
     @GetMapping("/calendar/{memberId}")
@@ -85,8 +90,24 @@ public class ScheduleController {
         }
 
     }
+    // 5. 특정 날짜의 스케줄 조회
+    @GetMapping("/calendar/{memberId}/{date}")
+    @Operation(summary = "특정 날짜의 스케줄 조회", description = "특정 사용자의 특정 날짜의 스케줄을 조회합니다.")
+    public ResponseEntity<?> getScheduleForDate(
+            @PathVariable Long memberId,
+            @PathVariable("date")
+            @Parameter(description = "조회할 날짜(YYYY-MM-DD 형식)", example = "2024-05-12")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        try {
+            List<ScheduleResponse> schedules = scheduleService.getScheduleForDate(memberId, date);
+            return ResponseEntity.ok(schedules);
+        } catch (MemberNotFoundException e) {
+            // 사용자를 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "사용자를 찾을 수 없습니다."));
+        }
+    }
 
-    // 5. schedule 진행 체크(변경) -> 생각해보니 진행 체크(완료, 진행 중, 미 진행)은 schedule 수정에서 할 수 있지 않을까
+
 
 
 

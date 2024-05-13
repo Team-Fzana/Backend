@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;        // 수연이가 해줄거임
+    private FollowService followService;
 
     /*
      * todo-list, 일정 리스트 조회
@@ -98,5 +100,25 @@ public class ScheduleService {
 
     }
 
+    public List<ScheduleResponse> getFriendCalendarForDate(Long userId, Long targetCalendarId, LocalDate date) {
+        List<Schedule> schedules = scheduleRepository.findByMemberIdAndDate(targetCalendarId, date);
+        return schedules.stream()
+                .map(ScheduleResponse::createSchedule)
+                .collect(Collectors.toList());
+    }
+
+    public List<ScheduleResponse> getScheduleForDate(Long memberId, LocalDate date) {
+        // 사용자 조회 및 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
+
+        // 특정 날짜에 해당하는 스케줄 조회
+        List<Schedule> schedules = scheduleRepository.findByMemberIdAndDate(memberId, date);
+
+        // 조회한 스케줄을 DTO로 변환하여 반환
+        return schedules.stream()
+                .map(ScheduleResponse::createSchedule)
+                .collect(Collectors.toList());
+    }
 
 }
