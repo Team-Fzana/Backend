@@ -46,7 +46,7 @@ public class FollowController {
 
     @GetMapping("/{memberId}/following")
     @Operation(summary = "팔로잉 목록 조회", description = "사용자 ID를 사용하여 해당 사용자가 팔로잉하고 있는 모든 사용자의 목록을 조회합니다.")
-    public ResponseEntity<?> getFollowingList(@PathVariable Long memberId) {
+    public ResponseEntity<Map<String, Object>> getFollowingList(@PathVariable Long memberId) {
         try {
             List<Follow> followingList = followService.getFollowingList(memberId);
             List<Map<String, Object>> result = followingList.stream().map(follow -> {
@@ -68,7 +68,7 @@ public class FollowController {
 
     @GetMapping("/{memberId}/followers")
     @Operation(summary = "팔로워 목록 조회", description = "사용자 ID를 사용하여 해당 사용자를 팔로우하고 있는 모든 사용자의 목록을 조회합니다.")
-    public ResponseEntity<?> getFollowerList(@PathVariable Long memberId) {
+    public ResponseEntity<Map<String, Object>> getFollowerList(@PathVariable Long memberId) {
         try {
             // 팔로워 목록 조회
             List<Follow> followersList = followService.getFollowerList(memberId);
@@ -95,30 +95,30 @@ public class FollowController {
 
     @DeleteMapping("/{memberId}/unfollow/{targetMemberId}")
     @Operation(summary = "사용자 언팔로우", description = "사용자 ID와 대상 사용자 ID를 사용하여 팔로우를 취소합니다.")
-    public ResponseEntity<?> deleteFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
+    public ResponseEntity<String> deleteFollow(@PathVariable Long memberId, @PathVariable Long targetMemberId) {
         try {
             String message = followService.cancelFollow(memberId, targetMemberId);
-            return ResponseEntity.ok(Map.of("message", message));
+            return ResponseEntity.ok("팔로우 취소 완료");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
     @DeleteMapping("/{memberId}/unfollwer/{targetMemberId}")
     @Operation(summary = "내 팔로워 삭제", description = "사용자 Id와 대상 사용자 ID를 사용하여 팔로워를 삭제합니다.")
-    public ResponseEntity<?> deleteFollwer(@PathVariable Long memberId, @PathVariable Long targetMemberId){
+    public ResponseEntity<String> deleteFollwer(@PathVariable Long memberId, @PathVariable Long targetMemberId){
         try {
             String message = followService.cancelFollwer(memberId, targetMemberId);
-            return ResponseEntity.ok(Map.of("message", message));
+            return ResponseEntity.ok("해당 팔로워 삭제 완료");
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
 
     @GetMapping("/{memberId}/friends/{friendId}/calendars")
     @Operation(summary = "친구 캘린더 조회", description = "사용자가 특정 친구의 캘린더를 조회합니다.")
-    public ResponseEntity<?> getFriendCalendars(@PathVariable Long memberId, @PathVariable Long friendId) {
+    public ResponseEntity<List<ScheduleResponse>> getFriendCalendars(@PathVariable Long memberId, @PathVariable Long friendId) {
         try {
             // 팔로잉 관계 확인
             if (!followService.isFollowing(memberId, friendId)) {
@@ -128,7 +128,7 @@ public class FollowController {
             List<ScheduleResponse> calendars = followService.getFriendCalendars(memberId, friendId);
             return ResponseEntity.ok(calendars);
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         } catch (Exception e) {
             // 오류 메시지를 담은 ScheduleResponse 객체를 생성하여 리스트에 추가
             ScheduleResponse errorResponse = new ScheduleResponse(e.getMessage());
@@ -138,7 +138,7 @@ public class FollowController {
 
     @GetMapping("/{memberId}/friends/{target_calendar_id}/{date}")
     @Operation(summary = "특정 날짜의 친구 캘린더 조회", description = "사용자가 특정 친구의 특정 날짜의 캘린더를 조회합니다.")
-    public ResponseEntity<?> getFriendCalendarForDate(
+    public ResponseEntity<List<ScheduleResponse>> getFriendCalendarForDate(
             @PathVariable("memberId") Long memberId,
             @PathVariable("target_calendar_id") Long targetCalendarId,
             @PathVariable("date")
@@ -148,7 +148,7 @@ public class FollowController {
             List<ScheduleResponse> schedules = scheduleService.getFriendCalendarForDate(memberId, targetCalendarId, date);
             return ResponseEntity.ok(schedules);
         } catch (Exception e) {
-            return ResponseEntity.status(404).body("Error retrieving friend calendar for date: " + e.getMessage());
+            return ResponseEntity.status(404).body(null);
         }
     }
 }
