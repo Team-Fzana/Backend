@@ -14,6 +14,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 특정 팔로워와 팔로잉 관계를 조회
     Optional<Follow> findByFollowerAndFollowing(Member follower, Member following);
 
+    Optional<Follow> findByFollowingAndFollower(Member following, Member follower);
+
+
     // 특정 멤버를 팔로잉하는 모든 팔로워를 조회
     List<Follow> findByFollower(Member follower);
 
