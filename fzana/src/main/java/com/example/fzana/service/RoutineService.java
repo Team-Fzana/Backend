@@ -7,6 +7,8 @@ import com.example.fzana.dto.RoutineRequest;
 import com.example.fzana.dto.RoutineResponse;
 import com.example.fzana.dto.ScheduleResponse;
 import com.example.fzana.exception.MemberNotFoundException;
+import com.example.fzana.exception.RoutineNotFoundException;
+import com.example.fzana.exception.ScheduleNotFoundException;
 import com.example.fzana.repository.MemberRepository;
 import com.example.fzana.repository.RoutineRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
 
     /*
-    * 사용자 루틴 리스트 가져오기
+    * 루틴 리스트 가져오기
     */
     public List<RoutineResponse> routineList(Long memberId) {
         // 사용자 조회 및 예외 처리
@@ -45,7 +47,7 @@ public class RoutineService {
     }
 
     /*
-    * 사용자 루틴 생성
+    * 루틴 생성
     */
     public RoutineResponse createRoutine(Long memberId, RoutineRequest routineRequest) {
         // 사용자 조회 및 예외 처리
@@ -62,5 +64,35 @@ public class RoutineService {
         return RoutineResponse.createRoutine(created);
 
 
+    }
+
+    /*
+    *  루틴 수정
+    */
+    public RoutineResponse updateRoutine(Long routineId, RoutineRequest routineRequest) {
+        // 루틴 조회 및 예외 처리
+        Routine target = routineRepository.findById(routineId)
+                .orElseThrow(() -> new RoutineNotFoundException("RoutineId with ID " + routineId + " not found."));
+
+        // 루틴 정보 수정
+        target.patch(routineRequest);
+
+        // DB 저장
+        Routine routine = routineRepository.save(target);
+
+        // 엔티티 -> DTO로 변환 후 반환
+        return RoutineResponse.createRoutine(routine);
+    }
+
+    public RoutineResponse deleteRoutine(Long routineId) {
+        // 루틴 조회 및 예외 처리
+        Routine target = routineRepository.findById(routineId)
+                .orElseThrow(() -> new RoutineNotFoundException("Routine with ID " + routineId + " not found."));
+
+        // 삭제
+        routineRepository.delete(target);
+
+        // 삭제한 데이터 DTO로 변환 후 반환
+        return RoutineResponse.createRoutine(target);
     }
 }

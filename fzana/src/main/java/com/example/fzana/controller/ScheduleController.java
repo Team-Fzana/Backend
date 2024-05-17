@@ -38,7 +38,6 @@ public class ScheduleController {
             // 없는 MemberID인 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
     }
 
     // 2. schedule 추가
@@ -55,7 +54,6 @@ public class ScheduleController {
             // 없는 MemberID인 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
     }
 
     // 3. schedule 수정
@@ -72,7 +70,6 @@ public class ScheduleController {
             // 없는 ScheduleID인 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
     }
 
     // 4. schedule 삭제
@@ -88,8 +85,8 @@ public class ScheduleController {
             // 없는 ScheduleID인 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
     }
+
     // 5. 특정 날짜의 스케줄 조회
     @GetMapping("/calendar/{memberId}/{date}")
     @Operation(summary = "특정 날짜의 스케줄 조회", description = "특정 사용자의 특정 날짜의 스케줄을 조회합니다.")
