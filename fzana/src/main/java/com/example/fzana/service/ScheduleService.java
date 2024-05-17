@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final MemberRepository memberRepository;        // 수연이가 해줄거임
+    private final MemberRepository memberRepository;
     private FollowService followService;
 
     /*
