@@ -5,6 +5,7 @@ import com.example.fzana.dto.*;
 import com.example.fzana.exception.InvalidMemberException;
 import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.service.MemberService;
+import com.example.fzana.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +19,16 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/member")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
     private final MemberService memberService;
+    private final ScheduleService scheduleService;
 
     @Autowired
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, ScheduleService scheduleService) {
         this.memberService = memberService;
+        this.scheduleService = scheduleService;
     }
 
     // 회원가입
@@ -75,7 +78,7 @@ public class MemberController {
     }
 
     // 사용자 정보 불러오기
-    @GetMapping("/members/{memberId}")
+    @GetMapping("/{memberId}")
     @Operation(summary = "사용자 정보 불러오기", description = "사용자의 불러옵니다.")
     public ResponseEntity<MemberInfoResponse> memberInfo(@PathVariable Long memberId){
         try{
@@ -89,7 +92,7 @@ public class MemberController {
     }
 
     // 사용자 닉네임 수정
-    @PostMapping("/members/{memberId}/nickname")
+    @PostMapping("/{memberId}/nickname")
     @Operation(summary = "사용자 닉네임 수정", description = "사용자의 닉네임을 수정합니다.")
     public ResponseEntity<NicknameResponse> submitNickname(@PathVariable Long memberId,
                                                            @RequestBody NicknameRequest nicknameRequest){
@@ -103,7 +106,7 @@ public class MemberController {
     }
 
     // 사용자 소개글 입력 & 수정
-    @PostMapping("/members/{memberId}/introduce")
+    @PostMapping("/{memberId}/introduce")
     @Operation(summary = "사용자 소개글 수정", description = "사용자의 소개글을 수정합니다.")
     public ResponseEntity<IntroduceResponse> submitNickname(@PathVariable Long memberId,
                                                             @RequestBody IntroduceRequest introduceRequest){
@@ -116,7 +119,7 @@ public class MemberController {
     }
 
     // 사용자 프로필 입력 & 수정
-    @PostMapping(value = "/members/{memberId}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{memberId}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "사용자 프로필 사진 수정", description = "사용자의 프로필 사진을 수정합니다.")
     public ResponseEntity<String> fileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long memberId) {
         try {
@@ -128,7 +131,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/api/v1/members/search")
+    @GetMapping("/search")
     @Operation(summary = "사용자 검색", description = "사용자 검색 결과를 가져옵니다.")
     public ResponseEntity<List<MemberListResponse>> searchMember(@RequestParam String nickNameOrEmail) {
             // 서비스에 위임
@@ -137,6 +140,20 @@ public class MemberController {
             return (memberList != null) ?
                     ResponseEntity.status(HttpStatus.OK).body(memberList) // 리스트 반환
                     : ResponseEntity.status(HttpStatus.NO_CONTENT).body(null); // 없으면 null 값 반환
+    }
+
+    // 진행 중인 항목이 있을 때 사용자의 활동 상태 활성화, 없으면 비활성
+    @PostMapping("/{memberId}/avtive")
+    @Operation(summary = "사용자 활동상태 업데이트", description = "사용자의 활동 상태를 업데이트 합니다.")
+    public ResponseEntity<String> updateState(@PathVariable Long memberId){
+        try{
+            Integer result = memberService.updateState(memberId);
+            return (result == 1) ?
+                    ResponseEntity.status(HttpStatus.OK).body("활성화!")
+                    : ResponseEntity.status(HttpStatus.OK).body("비활성화!");
+        }catch(MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
 }

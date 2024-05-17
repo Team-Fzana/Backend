@@ -29,7 +29,7 @@ public class Schedule {
     private LocalDateTime thisDay;
 
     @Column(name = "check_status") // "check" 대신 "check_status"로 변경
-    private int checkStatus;
+    private Integer checkStatus;        // 2: 진행 중, 1: 완료, 0: 미완료
 
     @Column(name = "start_time") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
@@ -38,8 +38,6 @@ public class Schedule {
     @Column(name = "end_time") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
     private Date endTime;
-
-
 
     @Column(name = "created_at") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가

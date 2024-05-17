@@ -17,4 +17,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "SELECT * FROM schedule WHERE member_id = :memberId AND DATE(this_day) = :date", nativeQuery = true)
     List<Schedule> findByMemberIdAndDate(@Param("memberId") Long memberId, @Param("date") LocalDate date);
 
+    // 여기는 사용자 id랑 진행상태가 2(진행 중)인 경우로 쿼리문을 짜야할듯..
+    @Query(value = "SELECT count(*) FROM schedule WHERE member_id = :memberId AND check_status = :ing", nativeQuery = true)
+    Integer findByMemberIdAndState(Long memberId, Integer ing);
 }
