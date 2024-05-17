@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Routine {
 
     @Id
@@ -52,5 +51,12 @@ public class Routine {
                 routineRequest.getStartTime(),
                 routineRequest.getEndTime()
         );
+    }
+
+    public void patch(RoutineRequest routineRequest) {
+        this.title = routineRequest.getTitle();
+        this.day = routineRequest.getDay();
+        this.startTime = routineRequest.getStartTime();
+        this.endTime = routineRequest.getEndTime();
     }
 }
