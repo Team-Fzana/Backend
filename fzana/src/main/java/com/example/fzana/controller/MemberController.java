@@ -79,7 +79,7 @@ public class MemberController {
 
     // 사용자 정보 불러오기
     @GetMapping("/{memberId}")
-    @Operation(summary = "사용자 정보 불러오기", description = "사용자의 불러옵니다.")
+    @Operation(summary = "사용자 정보 불러오기", description = "사용자의 정보를 불러옵니다.")
     public ResponseEntity<MemberInfoResponse> memberInfo(@PathVariable Long memberId){
         try{
             MemberInfoResponse infos = memberService.bringInfo(memberId);
