@@ -36,6 +36,9 @@ public class Member {
     @Column
     private String memberPhoto;
 
+    @Column
+    private Integer active;     // 1: 활동 중, 0: 활동 X
+
     protected Member() {
     }
 
@@ -76,5 +79,9 @@ public class Member {
 
     public void updateProfile(String fileUrl) {
         this.memberPhoto = fileUrl;
+    }
+
+    public void updateState(int active) {
+        this.active = active;
     }
 }
