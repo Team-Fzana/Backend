@@ -48,6 +48,7 @@ public class Schedule {
     private Date updatedAt;
 
 
+    // 생성자
     public Schedule(Member member, String content, int checkStatus, LocalDateTime thisDay, Date startTime, Date endTime) {
         this.member = member;
         this.content = content;
