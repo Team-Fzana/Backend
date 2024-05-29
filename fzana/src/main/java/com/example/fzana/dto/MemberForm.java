@@ -11,5 +11,7 @@ public class MemberForm {
     private String password;
     private String introduce;
     private String nickName;
+    private String memberPhoto;
+//    private States states;
 
 }
