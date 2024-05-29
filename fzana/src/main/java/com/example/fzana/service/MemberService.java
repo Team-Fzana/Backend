@@ -3,10 +3,12 @@ package com.example.fzana.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.fzana.domain.Member;
+import com.example.fzana.domain.Schedule;
 import com.example.fzana.dto.*;
 import com.example.fzana.exception.InvalidMemberException;
 import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.repository.MemberRepository;
+import com.example.fzana.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    private final ScheduleRepository scheduleRepository;
+
     @Autowired
-    public MemberService(MemberRepository memberRepository, AmazonS3Client s3Client) {
+    public MemberService(MemberRepository memberRepository, ScheduleRepository scheduleRepository, AmazonS3Client s3Client) {
         this.memberRepository = memberRepository;
+        this.scheduleRepository = scheduleRepository;
         this.s3Client = s3Client;
     }
 
@@ -107,13 +112,13 @@ public class MemberService {
     }
 
     /*
-     * 사용자 정보 가져오기 (일단 닉네임, 소개글)
+     * 사용자 정보 가져오기 (닉네임, 소개글, 프로필 사진, 활동 상태)
      */
     public MemberInfoResponse bringInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
-        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto());
+        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto(), member.getActive());
 
     }
 
@@ -172,5 +177,27 @@ public class MemberService {
         }
 
         return dtos;
+    }
+
+    /*
+     * 일정 리스트 중에 "진행 중"이 있을 경우 사용자 활동 상태 활성화
+     */
+    public Integer updateState(Long memberId) {
+        // 사용자 id 조회 및 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
+
+        //여기에 해당 사용자의 일정에 단 하나라도 checkStatus가 2(진행 중)일 경우 사용자의 활동상태(active) 활성화 하는 로직 짜기
+        Integer count = scheduleRepository.findByMemberIdAndState(memberId, 2);
+
+        if (count >= 1)
+            member.updateState(1);
+        else
+            member.updateState(0);
+
+        memberRepository.save(member);
+
+        return member.getActive();
+
     }
 }

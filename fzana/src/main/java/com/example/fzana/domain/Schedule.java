@@ -29,7 +29,7 @@ public class Schedule {
     private LocalDateTime thisDay;
 
     @Column(name = "check_status") // "check" 대신 "check_status"로 변경
-    private int checkStatus;
+    private Integer checkStatus;        // 2: 진행 중, 1: 완료, 0: 미완료
 
     @Column(name = "start_time") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
@@ -38,8 +38,6 @@ public class Schedule {
     @Column(name = "end_time") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
     private Date endTime;
-
-
 
     @Column(name = "created_at") // 데이터베이스 컬럼명 변경
     @Temporal(TemporalType.TIMESTAMP) // TemporalType 설정 추가
@@ -50,6 +48,7 @@ public class Schedule {
     private Date updatedAt;
 
 
+    // 생성자
     public Schedule(Member member, String content, int checkStatus, LocalDateTime thisDay, Date startTime, Date endTime) {
         this.member = member;
         this.content = content;
@@ -86,5 +85,11 @@ public class Schedule {
         this.thisDay = scheduleRequest.getThisDay(); // 등록 날짜 변경
         this.startTime = scheduleRequest.getStartTime(); // 시작 시간 변경
         this.endTime = scheduleRequest.getEndTime(); //종료 시간 변경
+    }
+
+    // 스케줄이 오늘 날짜인지 확인하는 메서드
+    public boolean isToday() {
+        LocalDateTime today = LocalDateTime.now(); // 현재 날짜와 시간 가져오기
+        return thisDay.toLocalDate().isEqual(today.toLocalDate()); // 스케줄의 날짜와 현재 날짜 비교
     }
 }
