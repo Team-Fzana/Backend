@@ -35,13 +35,18 @@ public class MemberController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "이메일, 비밀번호, 닉네임, 소개글을 등록하여 회원가입을 합니다.")
     public ResponseEntity<Member> signUp(@RequestBody MemberForm memberForm) {
+        try {
             Member member = memberService.signUp(
                     memberForm.getEmail(),
                     memberForm.getPassword(),
                     memberForm.getNickName(),
-                    memberForm.getIntroduce()
+                    memberForm.getIntroduce(),
+                    memberForm.getMemberPhoto() // 이미지 URL 전달
             );
             return ResponseEntity.ok(member);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     // 이메일 중복 확인
