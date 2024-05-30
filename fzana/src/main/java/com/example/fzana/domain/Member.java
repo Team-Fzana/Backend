@@ -43,7 +43,7 @@ public class Member {
     }
 
     public Member(final String email, final String password, final String nickName,
-                  final String introduce) {
+                  final String introduce, final String memberPhoto) {
         validateEmail(email);
         validateNickName(nickName);
 
@@ -51,6 +51,7 @@ public class Member {
         this.password=password;
         this.nickName=nickName;
         this.introduce=introduce;
+        this.memberPhoto=memberPhoto;
     }
 
 
