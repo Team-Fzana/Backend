@@ -152,8 +152,8 @@ public class MemberController {
     @Operation(summary = "사용자 활동상태 업데이트", description = "사용자의 활동 상태를 업데이트 합니다.")
     public ResponseEntity<String> updateState(@PathVariable Long memberId){
         try{
-            Integer result = memberService.updateState(memberId);
-            return (result == 1) ?
+            Boolean result = memberService.updateState(memberId);
+            return (result == Boolean.TRUE) ?
                     ResponseEntity.status(HttpStatus.OK).body("활성화!")
                     : ResponseEntity.status(HttpStatus.OK).body("비활성화!");
         }catch(MemberNotFoundException e){
