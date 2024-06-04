@@ -2,6 +2,7 @@ package com.example.fzana.repository;
 
 import com.example.fzana.domain.Follow;
 import com.example.fzana.domain.Member;
+import com.example.fzana.dto.FollowingResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

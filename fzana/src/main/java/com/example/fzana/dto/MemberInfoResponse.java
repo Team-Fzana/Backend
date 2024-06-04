@@ -9,9 +9,9 @@ public class MemberInfoResponse {
     private String nickname;
     private String introduce;
     private String memberPhoto;
-    private Integer active;
+    private Boolean active;
 
-    public static MemberInfoResponse createMemberinfoDto(String nickName, String introduce, String memberPhoto, Integer active) {
+    public static MemberInfoResponse createMemberinfoDto(String nickName, String introduce, String memberPhoto, Boolean active) {
         return new MemberInfoResponse(nickName, introduce, memberPhoto, active);
     }
 }
