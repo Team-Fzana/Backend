@@ -3,8 +3,7 @@ package com.example.fzana.service;
 import com.example.fzana.domain.Follow;
 import com.example.fzana.domain.Member;
 import com.example.fzana.domain.Schedule;
-import com.example.fzana.dto.FollowForm;
-import com.example.fzana.dto.ScheduleResponse;
+import com.example.fzana.dto.*;
 import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.repository.FollowRepository;
 import com.example.fzana.repository.MemberRepository;
@@ -13,7 +12,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,20 +54,34 @@ public class FollowService {
         return "사용자가 성공적으로 팔로우 목록에 추가되었습니다.";
     }
 
-    // 서비스 계층에 정의된 getFollowingList 메소드
-    public List<Follow> getFollowingList(Long memberId) {
+    // 팔로잉 목록 가져오기
+    public List<FollowingResponse> getFollowingList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-        return followRepository.findByFollower(member);
+        List<Follow> bringFollwings = followRepository.findByFollower(member);
+
+        List<FollowingResponse> dtos = new ArrayList<>();
+        for (int i = 0; i < bringFollwings.size(); i++){ // 1. 조회한 사용자 엔티티 수 만큼 반복
+            Follow f = bringFollwings.get(i);            // 2. 조회한 사용자 엔티티 하나씩 가져오기
+            FollowingResponse dto = FollowingResponse.createMember(f); // 3. 엔티티를 DTO로 변환
+            dtos.add(dto);                             // 4. 변환한 DTO를 dtos 리스트에 삽입
+        }
+
+        return dtos;
     }
 
-    public List<Follow> getFollowerList(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+    // 팔로워 목록 가져오기
+    public List<FollowerResponse> getFollowerList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        List<Follow> bringFollwers = followRepository.findByFollowing(member);
 
-        // 자기 자신을 제외한 팔로워 목록을 반환합니다.
-        return followRepository.findByFollowing(member).stream()
-                .filter(follow -> !follow.getFollower().getId().equals(memberId))
-                .collect(Collectors.toList());
+        List<FollowerResponse> dtos = new ArrayList<>();
+        for (int i = 0; i < bringFollwers.size(); i++){ // 1. 조회한 사용자 엔티티 수 만큼 반복
+            Follow f = bringFollwers.get(i);            // 2. 조회한 사용자 엔티티 하나씩 가져오기
+            FollowerResponse dto = FollowerResponse.createMember(f); // 3. 엔티티를 DTO로 변환
+            dtos.add(dto);                             // 4. 변환한 DTO를 dtos 리스트에 삽입
+        }
+
+        return dtos;
     }
 
     // 팔로잉 삭제

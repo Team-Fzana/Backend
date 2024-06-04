@@ -182,7 +182,7 @@ public class MemberService {
     /*
      * 일정 리스트 중에 "진행 중"이 있을 경우 사용자 활동 상태 활성화
      */
-    public Integer updateState(Long memberId) {
+    public Boolean updateState(Long memberId) {
         // 사용자 id 조회 및 예외 처리
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
@@ -191,9 +191,9 @@ public class MemberService {
         Integer count = scheduleRepository.findByMemberIdAndState(memberId, 2);
 
         if (count >= 1)
-            member.updateState(1);
+            member.updateState(Boolean.TRUE);
         else
-            member.updateState(0);
+            member.updateState(Boolean.FALSE);
 
         memberRepository.save(member);
 

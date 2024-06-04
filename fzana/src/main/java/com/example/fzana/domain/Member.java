@@ -37,7 +37,7 @@ public class Member {
     private String memberPhoto;
 
     @Column
-    private Integer active;     // 1: 활동 중, 0: 활동 X
+    private Boolean active;     // 1: 활동 중, 0: 활동 X
 
     protected Member() {
     }
@@ -82,7 +82,7 @@ public class Member {
         this.memberPhoto = fileUrl;
     }
 
-    public void updateState(int active) {
+    public void updateState(Boolean active) {
         this.active = active;
     }
 }
