@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowerResponse {
-    private Long followingId;
+    private Long followerId;
     private String name;
     private Boolean isActive;
     private String memberPhoto;
