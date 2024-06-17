@@ -36,10 +36,6 @@ public class MemberController {
     @Operation(summary = "회원가입", description = "이메일, 비밀번호, 닉네임, 소개글을 등록하여 회원가입을 합니다.")
     public ResponseEntity<Member> signUp(@RequestBody MemberForm memberForm) {
         try {
-            // S3에 이미지 업로드
-            String bucketName = "fzana"; // S3 버킷 이름 설정
-
-
             Member member = memberService.signUp(
                     memberForm.getEmail(),
                     memberForm.getPassword(),
