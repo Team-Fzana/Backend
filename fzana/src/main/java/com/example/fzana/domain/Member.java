@@ -4,8 +4,10 @@ import com.example.fzana.dto.IntroduceRequest;
 import com.example.fzana.dto.NicknameRequest;
 import com.example.fzana.exception.InvalidMemberException;
 import jakarta.persistence.*;
+import jakarta.validation.groups.Default;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +39,7 @@ public class Member {
     private String memberPhoto;
 
     @Column
-    private Boolean active;     // 1: 활동 중, 0: 활동 X
+    private Boolean active = false;     // 1: 활동 중, 0: 활동 X
 
     protected Member() {
     }
