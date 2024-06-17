@@ -124,7 +124,7 @@ public class MemberService {
 
 
     /*
-     * 사용자 프로필 사진 수정 로직 (s3) -> 이미 회원가입이 되어있는 상태에서 사용자 정보 수정에서 프로필 사진 수정을 할 때
+     * 사용자 프로필 사진 수정 로직 (s3)
      */
     public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
