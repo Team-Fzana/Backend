@@ -118,13 +118,13 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
-        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto(), member.getActive());
+        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto(), member.getEmail(), member.getActive());
 
     }
 
 
     /*
-     * 사용자 프로필 사진 등록 로직 (s3)
+     * 사용자 프로필 사진 수정 로직 (s3)
      */
     public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
@@ -140,7 +140,7 @@ public class MemberService {
     }
 
     // S3에 업로드 하기
-    private String uploadFileToS3Bucket(String bucketName, MultipartFile multipartFile) throws IOException {
+    public String uploadFileToS3Bucket(String bucketName, MultipartFile multipartFile) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
         String fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
 

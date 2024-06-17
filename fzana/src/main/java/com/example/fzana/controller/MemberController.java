@@ -123,9 +123,9 @@ public class MemberController {
         }
     }
 
-    // 사용자 프로필 입력 & 수정
+    // 사용자 프로필 사진 등록 & 수정
     @PostMapping(value = "/{memberId}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "사용자 프로필 사진 수정", description = "사용자의 프로필 사진을 수정합니다.")
+    @Operation(summary = "사용자 프로필 사진 등록", description = "사용자의 프로필 사진을 등록합니다.")
     public ResponseEntity<String> fileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long memberId) {
         try {
             String bucketName = "fzana"; // S3 버킷 이름 설정
