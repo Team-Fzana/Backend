@@ -11,6 +11,8 @@ services:
       - "3307:3306" # 호스트 머신의 3307 포트와 컨테이너의 3306 포트를 연결합니다.
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
 
 
   my-spring-boot-app:
@@ -27,7 +29,24 @@ services:
       SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
       SPRING_DATASOURCE_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     command: ["java", "-jar", "/app.jar"]
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - my-spring-boot-app
+    networks:
+      - app-network
 
 volumes:
   mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
 
