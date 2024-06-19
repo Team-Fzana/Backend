@@ -46,8 +46,7 @@ public class MemberService {
                          String introduce, String memberPhoto) {
         validateDuplicateEmail(email); // 이메일 중복 확인
 
-        Member member = new Member(email, password, nickName, introduce);
-        member.setMemberPhoto(memberPhoto); // memberPhoto 필드 설정
+        Member member = new Member(email, password, nickName, introduce,memberPhoto);
 
         return memberRepository.save(member); // DB 저장
     }
