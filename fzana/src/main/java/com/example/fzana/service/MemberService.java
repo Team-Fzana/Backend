@@ -43,12 +43,13 @@ public class MemberService {
      */
     @Transactional
     public Member signUp(String email, String password, String nickName,
-                         String introduce) {
-        validateDuplicateEmail(email); //이메일 중복 확인
+                         String introduce, String memberPhoto) {
+        validateDuplicateEmail(email); // 이메일 중복 확인
 
-        Member member = new Member(email,password,nickName,introduce);
-        return memberRepository.save(member); //DB 저장
+        Member member = new Member(email, password, nickName, introduce);
+        member.setMemberPhoto(memberPhoto); // memberPhoto 필드 설정
 
+        return memberRepository.save(member); // DB 저장
     }
 
     /*
