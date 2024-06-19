@@ -11,7 +11,7 @@ public class MemberListResponse {
     private String name;
     private String introduce;
     private String memberPhoto;
-    private Integer active;
+    private Boolean active;
 
     // DB에서 가져온 엔티티를 DTO로 반환하는 메서드
     public static MemberListResponse createMember(Member member) {

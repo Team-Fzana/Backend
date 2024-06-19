@@ -119,13 +119,13 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("올바르지 않은 사용자"));
 
-        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto(), member.getActive());
+        return MemberInfoResponse.createMemberinfoDto(member.getNickName(), member.getIntroduce(), member.getMemberPhoto(), member.getEmail(), member.getActive());
 
     }
 
 
     /*
-     * 사용자 프로필 사진 등록 로직 (s3)
+     * 사용자 프로필 사진 수정 로직 (s3)
      */
     public String uploadFileAndSaveUrl(String bucketName, MultipartFile multipartFile, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
@@ -141,7 +141,7 @@ public class MemberService {
     }
 
     // S3에 업로드 하기
-    private String uploadFileToS3Bucket(String bucketName, MultipartFile multipartFile) throws IOException {
+    public String uploadFileToS3Bucket(String bucketName, MultipartFile multipartFile) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
         String fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
 
@@ -183,7 +183,7 @@ public class MemberService {
     /*
      * 일정 리스트 중에 "진행 중"이 있을 경우 사용자 활동 상태 활성화
      */
-    public Integer updateState(Long memberId) {
+    public Boolean updateState(Long memberId) {
         // 사용자 id 조회 및 예외 처리
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
@@ -192,9 +192,9 @@ public class MemberService {
         Integer count = scheduleRepository.findByMemberIdAndState(memberId, 2);
 
         if (count >= 1)
-            member.updateState(1);
+            member.updateState(Boolean.TRUE);
         else
-            member.updateState(0);
+            member.updateState(Boolean.FALSE);
 
         memberRepository.save(member);
 
