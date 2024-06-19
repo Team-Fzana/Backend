@@ -31,6 +31,8 @@ public class FollowService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    private NotificationService notificationService;
+
     public String createFollow(FollowForm followForm) {
         Long memberId = followForm.getmemberId();
         Long targetMemberId = followForm.getTargetMemberId();
@@ -51,7 +53,13 @@ public class FollowService {
         follow.setFollower(member);
         follow.setFollowing(targetMember);
         followRepository.save(follow);
+
+        //팔로우 당한 회원에게 알림 전송
+        notificationService.sendNotification(targetMemberId,"새로운 팔로워가 있습니다: "+memberId);
+
         return "사용자가 성공적으로 팔로우 목록에 추가되었습니다.";
+
+
     }
 
     // 팔로잉 목록 가져오기
