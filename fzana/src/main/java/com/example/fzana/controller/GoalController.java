@@ -17,12 +17,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/goals")
 public class GoalController {
     private final GoalService goalService;
 
     //목표 조회
-    @GetMapping("/goal/{memberId}")
+    @GetMapping("/{memberId}")
     @Operation(summary = "사용자의 모든 goal 조회", description = "사용자의 모든 goal을 조회합니다.")
     public ResponseEntity<List<GoalResponse>> allGoals(@PathVariable Long memberId ) {
         try {
@@ -35,7 +35,7 @@ public class GoalController {
 
 
     //목표 추가
-    @PostMapping("/member/{memberId}/goal")
+    @PostMapping("/{memberId}")
     @Operation(summary = "goal 추가", description = "사용자가 goal을 추가합니다.")
     public ResponseEntity<GoalResponse> createGoal(@PathVariable Long memberId, @RequestBody GoalRequest goalRequest) {
         try {
@@ -48,7 +48,7 @@ public class GoalController {
     }
 
     //목표 수정
-    @PutMapping("/goal/{goalId}")
+    @PutMapping("/{goalId}")
     @Operation(summary = "goal 수정", description = "사용자가 goal을 수정힙니다.")
     public ResponseEntity<GoalResponse> update(@PathVariable final Long goalId, @RequestBody final GoalRequest goalRequest) {
        try{
@@ -63,7 +63,7 @@ public class GoalController {
 
 
     //목표 삭제
-    @DeleteMapping("/goal/{goalId}")
+    @DeleteMapping("/{goalId}")
     @Operation(summary = "goal 삭제", description = "사용자가 goal을 삭제합니다.")
     public ResponseEntity<?> deleteGoal(@PathVariable Long goalId) {
         goalService.delete(goalId);
