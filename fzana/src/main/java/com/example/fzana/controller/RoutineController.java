@@ -16,13 +16,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/routines")
 public class RoutineController {
 
     private final RoutineService routineService;
 
     // 루틴 리스트 조회
-    @GetMapping("/routines/{memberId}")
+    @GetMapping("/{memberId}")
     @Operation(summary = "사용자 루틴 리스트 불러오기", description = "사용자id를 사용해 루틴 리스트를 불러옵니다.")
     public ResponseEntity<List<RoutineResponse>> getRoutineList(@PathVariable Long memberId){
         try{
@@ -34,7 +34,7 @@ public class RoutineController {
     }
 
     // 루틴 생성
-    @PostMapping("/member/{memberId}/routines")
+    @PostMapping("/{memberId}")
     @Operation(summary = "사용자 루틴 추가", description = "사용자 id를 사용해 사용자 루틴 생성")
     public ResponseEntity<RoutineResponse> createRoutine (@PathVariable Long memberId,
                                                           @RequestBody RoutineRequest routineRequest){
@@ -47,7 +47,7 @@ public class RoutineController {
     }
 
     // 루틴 수정
-    @PutMapping("/routines/{routineId}")
+    @PutMapping("/{routineId}")
     @Operation(summary = "사용자 루틴 수정", description = "루틴 id를 사용해 사용자 루틴 수정")
     public ResponseEntity<RoutineResponse> updateRoutine (@PathVariable Long routineId,
                                                           @RequestBody RoutineRequest routineRequest){
@@ -60,7 +60,7 @@ public class RoutineController {
     }
 
     // 루틴 삭제
-    @DeleteMapping("/routines/{routineId}")
+    @DeleteMapping("/{routineId}")
     @Operation(summary = "사용자 루틴 삭제", description = "루틴 id를 사용해 사용자 루틴 삭제")
     public ResponseEntity<RoutineResponse> deleteRoutine (@PathVariable Long routineId){
         try{
