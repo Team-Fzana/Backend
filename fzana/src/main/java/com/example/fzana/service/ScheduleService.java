@@ -32,18 +32,21 @@ public class ScheduleService {
         // 사용자 조회 및 예외 처리
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
-        // 1. 일정 & todo-list 조회
-        List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
-
-        // 2. 엔티티 -> DTO 변환
-        List<ScheduleResponse> dtos = new ArrayList<ScheduleResponse>();
-        for (int i = 0; i < schedules.size(); i++){ // 1. 조회한 일정 엔티티 수 만큼 반복하기
-            Schedule s = schedules.get(i);          // 2. 조회한 일정 엔티티 하나씩 가져오기
-            ScheduleResponse dto = ScheduleResponse.createSchedule(s); // 3. 엔티티를 DTO로 변환
-            dtos.add(dto);                          // 4. 변환한 DTO를 dtos 리스트에 삽입
-        }
-
-        return dtos;
+//        // 1. 일정 & todo-list 조회
+//        List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
+//
+//        // 2. 엔티티 -> DTO 변환
+//        List<ScheduleResponse> dtos = new ArrayList<ScheduleResponse>();
+//        for (int i = 0; i < schedules.size(); i++){ // 1. 조회한 일정 엔티티 수 만큼 반복하기
+//            Schedule s = schedules.get(i);          // 2. 조회한 일정 엔티티 하나씩 가져오기
+//            ScheduleResponse dto = ScheduleResponse.createSchedule(s); // 3. 엔티티를 DTO로 변환
+//            dtos.add(dto);                          // 4. 변환한 DTO를 dtos 리스트에 삽입
+//        }
+//
+//        return dtos;
+        return scheduleRepository.findByMemberId(memberId).stream()
+                .map(ScheduleResponse :: createSchedule)
+                .collect(Collectors.toList());
     }
 
     /*
