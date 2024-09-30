@@ -8,12 +8,10 @@ import com.example.fzana.exception.MemberNotFoundException;
 import com.example.fzana.exception.ScheduleNotFoundException;
 import com.example.fzana.repository.ScheduleRepository;
 import com.example.fzana.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,6 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
-    private FollowService followService;
 
     /*
      * todo-list, 일정 리스트 조회
@@ -32,18 +29,7 @@ public class ScheduleService {
         // 사용자 조회 및 예외 처리
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
-//        // 1. 일정 & todo-list 조회
-//        List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
-//
-//        // 2. 엔티티 -> DTO 변환
-//        List<ScheduleResponse> dtos = new ArrayList<ScheduleResponse>();
-//        for (int i = 0; i < schedules.size(); i++){ // 1. 조회한 일정 엔티티 수 만큼 반복하기
-//            Schedule s = schedules.get(i);          // 2. 조회한 일정 엔티티 하나씩 가져오기
-//            ScheduleResponse dto = ScheduleResponse.createSchedule(s); // 3. 엔티티를 DTO로 변환
-//            dtos.add(dto);                          // 4. 변환한 DTO를 dtos 리스트에 삽입
-//        }
-//
-//        return dtos;
+
         return scheduleRepository.findByMemberId(memberId).stream()
                 .map(ScheduleResponse :: createSchedule)
                 .collect(Collectors.toList());
@@ -56,7 +42,6 @@ public class ScheduleService {
         // 1. 사용자 id 조회 및 예외 처리
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
-
 
         // 2. 일정 엔티티 생성
         Schedule schedule = Schedule.createSchedule(member, scheduleRequest);
@@ -105,6 +90,7 @@ public class ScheduleService {
 
     public List<ScheduleResponse> getFriendCalendarForDate(Long userId, Long targetCalendarId, LocalDate date) {
         List<Schedule> schedules = scheduleRepository.findByMemberIdAndDate(targetCalendarId, date);
+
         return schedules.stream()
                 .map(ScheduleResponse::createSchedule)
                 .collect(Collectors.toList());
@@ -112,7 +98,7 @@ public class ScheduleService {
 
     public List<ScheduleResponse> getScheduleForDate(Long memberId, LocalDate date) {
         // 사용자 조회 및 예외 처리
-        Member member = memberRepository.findById(memberId)
+        memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member with ID " + memberId + " not found."));
 
         // 특정 날짜에 해당하는 스케줄 조회
