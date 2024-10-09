@@ -1,6 +1,6 @@
 package com.example.fzana.domain.follow.domain;
 
-import com.example.fzana.domain.model.BaseEntity;
+import com.example.fzana.global.model.BaseEntity;
 import com.example.fzana.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;

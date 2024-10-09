@@ -1,7 +1,7 @@
 package com.example.fzana.domain.goal.domain;
 
 
-import com.example.fzana.domain.model.BaseEntity;
+import com.example.fzana.global.model.BaseEntity;
 import com.example.fzana.domain.goal.dto.GoalRequest;
 import com.example.fzana.domain.member.domain.Member;
 import com.example.fzana.domain.exception.InvalidGoalException;
