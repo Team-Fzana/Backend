@@ -1,4 +1,4 @@
-package com.example.fzana.domain.exception;
+package com.example.fzana.domain.member.exception;
 
 public class MemberNotFoundException extends RuntimeException {
 

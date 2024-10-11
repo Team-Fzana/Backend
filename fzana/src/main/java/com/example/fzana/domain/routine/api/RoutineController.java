@@ -1,7 +1,7 @@
 package com.example.fzana.domain.routine.api;
 
-import com.example.fzana.domain.exception.MemberNotFoundException;
-import com.example.fzana.domain.exception.RoutineNotFoundException;
+import com.example.fzana.domain.member.exception.MemberNotFoundException;
+import com.example.fzana.domain.routine.exception.RoutineNotFoundException;
 import com.example.fzana.domain.routine.dto.RoutineRequest;
 import com.example.fzana.domain.routine.dto.RoutineResponse;
 import com.example.fzana.domain.routine.application.RoutineService;

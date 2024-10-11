@@ -1,4 +1,4 @@
-package com.example.fzana.domain.exception;
+package com.example.fzana.domain.goal.exception;
 
 public class InvalidGoalException extends RuntimeException {
 

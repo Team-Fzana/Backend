@@ -1,9 +1,9 @@
 package com.example.fzana.domain.schedule.application;
 
-import com.example.fzana.domain.exception.MemberNotFoundException;
+import com.example.fzana.domain.member.exception.MemberNotFoundException;
 import com.example.fzana.domain.member.domain.Member;
 import com.example.fzana.domain.member.dao.MemberRepository;
-import com.example.fzana.domain.exception.ScheduleNotFoundException;
+import com.example.fzana.domain.schedule.exception.ScheduleNotFoundException;
 import com.example.fzana.domain.schedule.dto.ScheduleRequest;
 import com.example.fzana.domain.schedule.dto.ScheduleResponse;
 import com.example.fzana.domain.schedule.dao.ScheduleRepository;

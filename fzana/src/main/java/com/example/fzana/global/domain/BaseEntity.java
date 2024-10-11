@@ -1,4 +1,4 @@
-package com.example.fzana.global.model;
+package com.example.fzana.global.domain;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;

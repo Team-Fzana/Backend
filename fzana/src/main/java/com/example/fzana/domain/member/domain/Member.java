@@ -1,6 +1,6 @@
 package com.example.fzana.domain.member.domain;
 
-import com.example.fzana.domain.exception.InvalidMemberException;
+import com.example.fzana.domain.member.exception.InvalidMemberException;
 import com.example.fzana.domain.member.dto.IntroduceRequest;
 import com.example.fzana.domain.member.dto.NicknameRequest;
 import jakarta.persistence.*;
