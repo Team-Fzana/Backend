@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/follow")
+@RequestMapping("/api/v1/follows")
 public class FollowController {
 
     @Autowired
