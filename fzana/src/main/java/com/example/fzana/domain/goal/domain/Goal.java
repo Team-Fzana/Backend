@@ -1,10 +1,10 @@
 package com.example.fzana.domain.goal.domain;
 
 
-import com.example.fzana.global.model.BaseEntity;
+import com.example.fzana.global.domain.BaseEntity;
 import com.example.fzana.domain.goal.dto.GoalRequest;
 import com.example.fzana.domain.member.domain.Member;
-import com.example.fzana.domain.exception.InvalidGoalException;
+import com.example.fzana.domain.goal.exception.InvalidGoalException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
