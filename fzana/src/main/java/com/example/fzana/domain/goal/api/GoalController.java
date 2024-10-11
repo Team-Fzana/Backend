@@ -1,7 +1,7 @@
 package com.example.fzana.domain.goal.api;
 
-import com.example.fzana.domain.exception.MemberNotFoundException;
-import com.example.fzana.domain.exception.ScheduleNotFoundException;
+import com.example.fzana.domain.member.exception.MemberNotFoundException;
+import com.example.fzana.domain.schedule.exception.ScheduleNotFoundException;
 import com.example.fzana.domain.goal.dto.GoalRequest;
 import com.example.fzana.domain.goal.dto.GoalResponse;
 import com.example.fzana.domain.goal.application.GoalService;
