@@ -1,7 +1,7 @@
 package com.example.fzana.domain.member.api;
 
-import com.example.fzana.domain.exception.InvalidMemberException;
-import com.example.fzana.domain.exception.MemberNotFoundException;
+import com.example.fzana.domain.member.exception.InvalidMemberException;
+import com.example.fzana.domain.member.exception.MemberNotFoundException;
 import com.example.fzana.domain.member.application.MemberService;
 import com.example.fzana.domain.member.domain.Member;
 import com.example.fzana.domain.member.dto.*;

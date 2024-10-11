@@ -1,6 +1,6 @@
 package com.example.fzana.domain.follow.api;
 
-import com.example.fzana.domain.exception.MemberNotFoundException;
+import com.example.fzana.domain.member.exception.MemberNotFoundException;
 import com.example.fzana.domain.follow.application.FollowService;
 import com.example.fzana.domain.follow.dto.FollowForm;
 import com.example.fzana.domain.follow.dto.FollowResponse;
