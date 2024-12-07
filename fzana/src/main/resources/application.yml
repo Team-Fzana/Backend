@@ -17,7 +17,8 @@ spring:
     init:
       data-locations: "classpath*:db/data.sql"
       mode: always
-
   profiles:
     include: aws
+
+
 
