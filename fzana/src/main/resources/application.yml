@@ -19,5 +19,5 @@ spring:
       mode: always
 
   profiles:
-    include: aws #aws.yml 불러오기
+    include: aws
 
