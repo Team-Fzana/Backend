@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'net.bytebuddy:byte-buddy:1.14.6'
 	implementation 'com.fasterxml:classmate:1.5.1'
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 //	implementation 'mysql:mysql-connector-java:8.0.40' // 최신 버전으로 교체 가능
 	testImplementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
