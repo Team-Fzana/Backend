@@ -32,6 +32,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ubuntu
         key: ${{ secrets.EC2_KEY }}
+        debug: true
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           cd ~/Backend/fzana
