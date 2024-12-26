@@ -37,4 +37,4 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           cd ~/Backend/fzana
           docker-compose down
-          docker-compose up -d
+          docker-compose up --build -d
