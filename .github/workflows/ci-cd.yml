@@ -82,6 +82,7 @@ jobs:
 
           # 도커 이미지 업데이트 및 애플리케이션 실행
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
+          docker rm -f mysql-siso || true # 기존 컨테이너 삭제
           cd ~/Backend/siso
           docker-compose down
           docker-compose up --build -d
