@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/goalsss")
+@RequestMapping("/api/v1/goalsssss")
 public class GoalController {
     private final GoalService goalService;
 
