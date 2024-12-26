@@ -22,8 +22,8 @@ jobs:
     - name: Build and Push Docker Image
       working-directory: ./fzana
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/siso-app:latest .
-        docker push ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
 
     # 4. Deploy to EC2 
     - name: Deploy to EC2
@@ -56,7 +56,7 @@ jobs:
                 - app-network
 
             siso-app:
-              image: ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
+              image: ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
               ports:
                 - "8080:8080"
               depends_on:
@@ -81,7 +81,7 @@ jobs:
           ' > ~/Backend/siso/docker-compose.yml
 
           # 도커 이미지 업데이트 및 애플리케이션 실행
-          docker pull ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           cd ~/Backend/siso
           docker-compose down
           docker-compose up --build -d
