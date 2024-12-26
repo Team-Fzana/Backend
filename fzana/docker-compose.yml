@@ -15,7 +15,7 @@ services:
       - app-network
 
 
-  my-spring-boot-app:
+  siso-app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,17 +31,6 @@ services:
       SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
       SPRING_DATASOURCE_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     command: ["java", "-jar", "/app.jar"]
-    networks:
-      - app-network
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - my-spring-boot-app
     networks:
       - app-network
 
