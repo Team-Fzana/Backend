@@ -25,16 +25,12 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
 
-    - name: Deploy to EC2
+    - name: Test SSH Connection
       run: |
         echo "${{ secrets.EC2_KEY }}" > key.pem
         chmod 600 key.pem
-        ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-          docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
-          cd ~/Backend/fzana
-          docker-compose down
-          docker-compose up -d
-        EOF
+        ssh -i key.pem ubuntu@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
+
 
     # 4. Deploy to EC2
     - name: Deploy to EC2
