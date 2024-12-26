@@ -1,3 +1,92 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - develop
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     # 1. Checkout the code
+#     - name: Checkout code
+#       uses: actions/checkout@v3
+
+#     # 2. Log in to Docker Hub
+#     - name: Log in to Docker Hub
+#       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#     # 3. Build and Push Docker Image
+#     - name: Build and Push Docker Image
+#       working-directory: ./fzana
+#       run: |
+#         docker build -t ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest .
+#         docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
+
+#     # 4. Deploy to EC2
+#     - name: Deploy to EC2
+#       uses: appleboy/ssh-action@v1.2.0
+#       with:
+#         host: ${{ secrets.EC2_HOST }}
+#         username: ubuntu
+#         key: ${{ secrets.EC2_KEY }}
+#         debug: true
+#         script: |
+#           # 필요한 디렉토리 생성
+#           mkdir -p ~/Backend/siso
+
+#           # docker-compose.yml 파일 생성
+#           cat <<EOF > ~/Backend/siso/docker-compose.yml
+#           version: "3"
+
+#           services:
+#             mysql:
+#               image: mysql:8.0.36
+#               container_name: mysql-siso
+#               environment:
+#                 MYSQL_ROOT_PASSWORD: 12345678
+#                 MYSQL_DATABASE: to_do
+#               ports:
+#                 - "3307:3306"
+#               volumes:
+#                 - mysql-data:/var/lib/mysql
+#               networks:
+#                 - app-network
+
+#             siso-app:
+#               image: ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
+#               ports:
+#                 - "8080:8080"
+#               depends_on:
+#                 - mysql
+#               environment:
+#                 WAIT_HOSTS: mysql:3306
+#                 AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+#                 AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
+#                 SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/to_do"
+#                 SPRING_DATASOURCE_USERNAME: "root"
+#                 SPRING_DATASOURCE_PASSWORD: "12345678"
+#               command: ["java", "-jar", "/app.jar"]
+#               networks:
+#                 - app-network
+
+#           volumes:
+#             mysql-data:
+
+#           networks:
+#             app-network:
+#               driver: bridge
+#           EOF
+
+#           # 도커 이미지 업데이트 및 애플리케이션 실행
+#           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
+#           docker rm -f mysql-siso || true
+#           cd ~/Backend/siso
+#           docker-compose down
+#           docker-compose up --build -d
+
 name: CI/CD Pipeline
 
 on:
@@ -25,7 +114,17 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
 
-    # 4. Deploy to EC2
+    # 4. Transfer Docker Compose File to EC2
+    - name: Transfer Docker Compose to EC2
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_KEY }}
+        source: ./fzana/docker-compose.yml
+        target: ~/Backend/siso/
+
+    # 5. Deploy to EC2
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -34,55 +133,10 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         debug: true
         script: |
-          # 필요한 디렉토리 생성
-          mkdir -p ~/Backend/siso
-
-          # docker-compose.yml 파일 생성
-          cat <<EOF > ~/Backend/siso/docker-compose.yml
-          version: "3"
-
-          services:
-            mysql:
-              image: mysql:8.0.36
-              container_name: mysql-siso
-              environment:
-                MYSQL_ROOT_PASSWORD: 12345678
-                MYSQL_DATABASE: to_do
-              ports:
-                - "3307:3306"
-              volumes:
-                - mysql-data:/var/lib/mysql
-              networks:
-                - app-network
-
-            siso-app:
-              image: ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
-              ports:
-                - "8080:8080"
-              depends_on:
-                - mysql
-              environment:
-                WAIT_HOSTS: mysql:3306
-                AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
-                AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
-                SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/to_do"
-                SPRING_DATASOURCE_USERNAME: "root"
-                SPRING_DATASOURCE_PASSWORD: "12345678"
-              command: ["java", "-jar", "/app.jar"]
-              networks:
-                - app-network
-
-          volumes:
-            mysql-data:
-
-          networks:
-            app-network:
-              driver: bridge
-          EOF
-
-          # 도커 이미지 업데이트 및 애플리케이션 실행
+          # Docker 이미지 업데이트 및 애플리케이션 실행
+          cd ~/Backend/siso
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           docker rm -f mysql-siso || true
-          cd ~/Backend/siso
           docker-compose down
           docker-compose up --build -d
+
