@@ -22,10 +22,10 @@ jobs:
     - name: Build and Push Docker Image
       working-directory: ./fzana
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest .
-        docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/siso-app:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
 
-    # 4. Deploy to EC2 이제 되려나
+    # 4. Deploy to EC2
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -34,7 +34,54 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         debug: true
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
-          cd ~/Backend/fzana
+          # 필요한 디렉토리 생성
+          mkdir -p ~/Backend/siso
+
+          # docker-compose.yml 파일 생성
+          echo '
+          version: "3"
+
+          services:
+            mysql:
+              image: mysql:8.0.36
+              container_name: mysql-siso
+              environment:
+                MYSQL_ROOT_PASSWORD: 12345678
+                MYSQL_DATABASE: to_do
+              ports:
+                - "3307:3306" # 호스트 머신의 3307 포트와 컨테이너의 3306 포트를 연결합니다.
+              volumes:
+                - mysql-data:/var/lib/mysql
+              networks:
+                - app-network
+
+            siso-app:
+              image: ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
+              ports:
+                - "8080:8080"
+              depends_on:
+                - mysql
+              environment:
+                WAIT_HOSTS: mysql:3306
+                AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+                AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
+                SPRING_DATASOURCE_URL: "${SPRING_DATASOURCE_URL}"
+                SPRING_DATASOURCE_USERNAME: "root"
+                SPRING_DATASOURCE_PASSWORD: "12345678"
+              command: ["java", "-jar", "/app.jar"]
+              networks:
+                - app-network
+
+          volumes:
+            mysql-data:
+
+          networks:
+            app-network:
+              driver: bridge
+          ' > ~/Backend/siso/docker-compose.yml
+
+          # 도커 이미지 업데이트 및 애플리케이션 실행
+          docker pull ${{ secrets.DOCKER_USERNAME }}/siso-app:latest
+          cd ~/Backend/siso
           docker-compose down
           docker-compose up --build -d
