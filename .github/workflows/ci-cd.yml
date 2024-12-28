@@ -45,6 +45,7 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         source: |
           ./fzana/docker-compose.yml
+          ./fzana/.env
         target: ~/Backend/siso/
 
     # Deploy to EC2
