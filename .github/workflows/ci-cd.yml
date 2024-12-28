@@ -39,7 +39,7 @@ jobs:
     - name: Verify Files
       run: |
         ls -l ./fzana/docker-compose.yml
-        ls -l ./fzana/.env
+        ls -l .env
 
     # Transfer Docker Compose File to EC2
     - name: Transfer Docker Compose to EC2
