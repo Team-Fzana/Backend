@@ -44,6 +44,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_KEY }}
         debug: true
+        env: DOCKER_USERNAME:${{ secrets.DOCKER_USERNAME }}
         script: |
           # Docker 이미지 업데이트 및 애플리케이션 실행
           cd ~/Backend/siso/fzana
