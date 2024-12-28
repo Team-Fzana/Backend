@@ -25,5 +25,5 @@ RUN chmod +x wait-for-it.sh
 EXPOSE 8080
 
 # wait-for-it.sh 실행 후 애플리케이션 실행
-ENTRYPOINT ["./wait-for-it.sh", "mysqldb:3306", "--"]
+ENTRYPOINT ["./wait-for-it.sh", "mysql:3306", "--"]
 CMD ["java", "-jar", "/app.jar"]
