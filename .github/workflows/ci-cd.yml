@@ -29,6 +29,7 @@ jobs:
     # .env 파일 생성 단계
     - name: Create .env File
       run: |
+        mkdir -p ./fzana
         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
         echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
         echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
