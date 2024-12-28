@@ -63,7 +63,7 @@ jobs:
         debug: true
         script: |
           # Docker 이미지 업데이트 및 애플리케이션 실행
-          cd ~/Backend
+          cd ~/Backend/fzana
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           docker-compose down
           docker-compose up --build -d
