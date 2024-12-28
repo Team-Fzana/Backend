@@ -16,9 +16,7 @@ services:
 
 
   siso-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: "${DOCKER_USERNAME}/fzana-app:latest"
     ports:
       - "8080:8080"
     depends_on:
