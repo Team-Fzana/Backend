@@ -27,24 +27,15 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
 
     # .env 파일 생성 단계
-    - name: Create .env File
+    - name: Create .env(temp) File
       run: |
         mkdir -p ./fzana
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> ./fzana/.env
-        echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> ./fzana/.env
-        echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> ./fzana/.env
-        echo "SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}" >> ./fzana/.env
+        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> ./fzana/env
+        echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> ./fzana/env
+        echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> ./fzana/env
+        echo "SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}" >> ./fzana/env
         echo "MYSQL_USER=root" >> ./fzana/.env
         echo "MYSQL_ROOT_PASSWORD=12345678" >> ./fzana/.env
-        
-    - name: Verify Files
-      run: |
-        ls -a
-        ls -a ./fzana/docker-compose.yml
-        ls -a ./fzana/.env
-        ls -a ./fzana
-        cat ./fzana/.env
-        ls ./fzana
     
     # Transfer Docker Compose File to EC2
     - name: Transfer Docker Compose to EC2
@@ -54,8 +45,8 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_KEY }}
         source: |
-          ./docker-compose.yml
-          ./.env
+          ./fzana/docker-compose.yml
+          ./fzana/env
         target: ~/Backend/siso/
         debug: true
 
