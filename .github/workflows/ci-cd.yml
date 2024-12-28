@@ -42,6 +42,7 @@ jobs:
         ls -l ./fzana/docker-compose.yml
         ls -l ./fzana/.env
         ls -l ./fzana
+        cat ./fzana/.env
     
     # Transfer Docker Compose File to EC2
     - name: Transfer Docker Compose to EC2
