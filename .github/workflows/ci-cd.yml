@@ -1,4 +1,4 @@
-# second instance
+# New instance
 name: CI/CD Pipeline
 
 on:
