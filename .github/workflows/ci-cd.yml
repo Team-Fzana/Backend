@@ -46,7 +46,7 @@ jobs:
         debug: true
         script: |
           # Docker 이미지 업데이트 및 애플리케이션 실행
-          cd ~/Backend/siso
+          cd ~/Backend/siso/fzana
           docker pull ${{ secrets.DOCKER_USERNAME }}/fzana-app:latest
           docker rm -f mysql-siso || true
           docker-compose down
