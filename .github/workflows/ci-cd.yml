@@ -44,11 +44,7 @@ jobs:
         ls -a ./fzana/.env
         ls -a ./fzana
         cat ./fzana/.env
-
-    - name: Adjust file paths
-      run: |
-        mv ./fzana/docker-compose.yml ./docker-compose.yml
-        mv ./fzana/.env ./env
+        ls ./fzana
     
     # Transfer Docker Compose File to EC2
     - name: Transfer Docker Compose to EC2
@@ -59,6 +55,7 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         source: |
           ./docker-compose.yml
+          ./.env
         target: ~/Backend/siso/
         debug: true
 
