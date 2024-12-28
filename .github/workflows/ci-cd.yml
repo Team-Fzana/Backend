@@ -50,8 +50,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_KEY }}
         source: |
-          ./fzana/docker-compose.yml
-          ./fzana/Dockerfile
+          ./fzana
         target: ~/Backend/siso/
         debug: true
 
