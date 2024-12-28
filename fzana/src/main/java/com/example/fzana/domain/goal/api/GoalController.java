@@ -21,7 +21,7 @@ public class GoalController {
 
     //목표 조회
     @GetMapping("/{memberId}")
-    @Operation(summary = "사용자의 모든 goal을 조회", description = "사용자의 모든 goal을 조회합니다.")
+    @Operation(summary = "사용자의 모든 goal 조회", description = "사용자의 모든 goal을 조회합니다.")
     public ResponseEntity<List<GoalResponse>> allGoals(@PathVariable Long memberId ) {
         try {
             List<GoalResponse> goalList = goalService.goalList(memberId);
