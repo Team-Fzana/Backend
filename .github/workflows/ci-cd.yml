@@ -56,6 +56,7 @@ jobs:
           ./fzana/docker-compose.yml
           ./fzana/.env
         target: ~/Backend/siso/
+        debug: true
 
     # Deploy to EC2
     - name: Deploy to EC2
