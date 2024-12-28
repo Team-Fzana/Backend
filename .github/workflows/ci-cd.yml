@@ -39,6 +39,7 @@ jobs:
         
     - name: Verify Files
       run: |
+        ls -l
         ls -l ./fzana/docker-compose.yml
         ls -l ./fzana/.env
         ls -l ./fzana
