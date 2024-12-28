@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: to_do
     ports:
-      - "3307:3306" # 호스트 머신의 3307 포트와 컨테이너의 3306 포트를 연결합니다.
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
