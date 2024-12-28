@@ -41,7 +41,8 @@ jobs:
       run: |
         ls -l ./fzana/docker-compose.yml
         ls -l ./fzana/.env
-
+        ls -l ./fzana
+    
     # Transfer Docker Compose File to EC2
     - name: Transfer Docker Compose to EC2
       uses: appleboy/scp-action@v0.1.7
