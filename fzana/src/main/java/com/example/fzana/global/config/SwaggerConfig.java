@@ -8,16 +8,14 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@OpenAPIDefinition(
-//        servers = {
-//                @Server(url = "https://siiso.site", description = "개발 서버"),
-//                @Server(url = "http://localhost:8080", description = "로컬 서버")
-//        })
+@OpenAPIDefinition(
+        servers = {
+                @Server(url = "https://siiso.site", description = "개발 서버"),
+                @Server(url = "http://localhost:8080", description = "로컬 서버")
+        })
 
 @Configuration
 public class SwaggerConfig {
-
-
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -25,13 +23,5 @@ public class SwaggerConfig {
                         .title("Siiso API Documentation")
                         .version("1.0")
                         .description("API documentation for Siiso application"));
-    }
-
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("public-api")
-                .pathsToMatch("/api/**")
-                .build();
     }
 }
