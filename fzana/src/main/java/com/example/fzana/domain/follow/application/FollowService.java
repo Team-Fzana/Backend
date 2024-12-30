@@ -55,8 +55,8 @@ public class FollowService {
         follow.setFollowing(targetMember);
         followRepository.save(follow);
 
-        //팔로우 당한 회원에게 알림 전송
-        notificationService.sendNotification(targetMemberId,"새로운 팔로워가 있습니다: "+memberId);
+//        //팔로우 당한 회원에게 알림 전송
+//        notificationService.sendNotification(targetMemberId,"새로운 팔로워가 있습니다: "+memberId);
 
         return "사용자가 성공적으로 팔로우 목록에 추가되었습니다.";
 
