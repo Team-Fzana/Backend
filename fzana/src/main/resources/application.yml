@@ -23,7 +23,7 @@ spring:
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: /swagger-ui/index.html
     urls:
       - url: https://siiso.site/v3/api-docs
         name: API Documentation
