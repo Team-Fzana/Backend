@@ -21,4 +21,12 @@ spring:
     include: aws
 
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - url: https://siiso.site/v3/api-docs
+        name: API Documentation
+  api-docs:
+    path: /v3/api-docs
 
