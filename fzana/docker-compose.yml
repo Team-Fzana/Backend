@@ -3,39 +3,25 @@ version: '3'
 services:
   mysql:
     image: mysql:8.0.36
-    container_name: mysql-siso
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: to_do
     ports:
-      - "3307:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - app-network
+      - "3307:3306"  # 호스트 3307 → 컨테이너 3306 매핑
 
-
-  siso-app:
-    image: "${DOCKER_USERNAME}/fzana-app:latest"
+  my-spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - mysql
     environment:
-      WAIT_HOSTS: mysql:3306
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/to_do?createDatabaseIfNotExist=true&characterEncoding=UTF-8&profileSql=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "12345678"
       AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
       AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
-      SPRING_DATASOURCE_URL: "${SPRING_DATASOURCE_URL}"
-      SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
-      SPRING_DATASOURCE_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     command: ["java", "-jar", "/app.jar"]
-    networks:
-      - app-network
-
-volumes:
-  mysql-data:
-
-networks:
-  app-network:
-    driver: bridge
-
